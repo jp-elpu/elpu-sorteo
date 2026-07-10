@@ -461,7 +461,7 @@ footer.app-footer{
   <div class="container d-flex align-items-center gap-3">
     <div>
       <div class="fw-bold" style="font-family:'Space Grotesk',sans-serif; font-size:1.15rem;">Sorteos ELPU</div>
-      <div class="step-pill" id="topStepLabel">Paso 1 · Configuración</div>
+      <div class="step-pill" id="topStepLabel">Configuración</div>
     </div>
     <div class="ms-auto d-none d-md-flex align-items-center gap-2" id="poolStatusTop"></div>
   </div>
@@ -942,7 +942,7 @@ $('#btnIniciar').addEventListener('click', () => {
 
   $('#screen-config').classList.add('d-none');
   $('#screen-portada').classList.remove('d-none');
-  $('#topStepLabel').textContent = 'Paso 2 · Portada del sorteo';
+  $('#topStepLabel').textContent = 'Portada del sorteo';
   renderPortada();
 });
 
@@ -978,7 +978,7 @@ $('#btnPortadaComenzar').addEventListener('click', () => {
 $('#btnPortadaIniciar').addEventListener('click', () => {
   $('#screen-portada').classList.add('d-none');
   $('#screen-sorteo').classList.remove('d-none');
-  $('#topStepLabel').textContent = 'Paso 3 · Sorteo en curso';
+  $('#topStepLabel').textContent = 'Sorteo en curso';
   fmtPoolCount();
   startPrizeRound();
 });
@@ -1339,7 +1339,7 @@ $('#btnIrResumenFinal').addEventListener('click', () => {
 function showFinalSummary(){
   $('#screen-sorteo').classList.add('d-none');
   $('#screen-final').classList.remove('d-none');
-  $('#topStepLabel').textContent = 'Paso 4 · Resumen final';
+  $('#topStepLabel').textContent = 'Resumen final';
 
   const wrap = $('#finalCards');
   wrap.innerHTML = state.results.map((r) => `
