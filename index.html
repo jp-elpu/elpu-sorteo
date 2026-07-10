@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorteos ELPU</title>
+
+<!-- Bootstrap 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --brand-blue:#016db5;
+  --brand-blue-dark:#014f85;
+  --brand-orange:#f48634;
+  --brand-orange-dark:#d96c1e;
+  --ink:#0c2233;
+  --paper:#ffffff;
+  --line:#e3ecf3;
+  --muted:#5b7688;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+*{box-sizing:border-box;}
+body{
+  background:var(--paper);
+  color:var(--ink);
+  font-family:'Inter',system-ui,sans-serif;
+  min-height:100vh;
+}
+h1,h2,h3,h4,.display-font{
+  font-family:'Space Grotesk',sans-serif;
+  letter-spacing:-0.01em;
+}
+.text-brand{color:var(--brand-blue);}
+.text-orange{color:var(--brand-orange);}
+.bg-brand{background:var(--brand-blue);}
+.bg-orange{background:var(--brand-orange);}
+
+/* ============ LENGUAJE DE MOVIMIENTO UNIFICADO ============
+   Una misma animación de entrada (liveIn) y las mismas curvas/tiempos
+   de transición se reutilizan en tarjetas, botones, inputs, badges,
+   chips e items de lista en toda la página, para que se sienta viva
+   y consistente en vez de estática o dispareja. */
+@keyframes liveIn{
+  from{ opacity:0; transform:translateY(10px) scale(.985); }
+  to{ opacity:1; transform:translateY(0) scale(1); }
+}
+.card-clean, .acces-card, .water-chip, .badge-soft, .badge-soft-orange, .table-clean tbody tr{
+  animation:liveIn .45s var(--ease) both;
+}
+.card-clean{
+  transition:transform .25s var(--ease), box-shadow .25s var(--ease), border-color .25s var(--ease);
+}
+.card-clean:hover{
+  transform:translateY(-3px);
+  box-shadow:0 16px 38px rgba(1,109,181,.14);
+}
+.btn{
+  transition:transform .16s var(--ease), box-shadow .2s var(--ease), background-color .18s var(--ease), color .18s var(--ease);
+}
+.btn:active{ transform:scale(.95); }
+.btn-brand:hover, .btn-orange:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 22px rgba(0,0,0,.14);
+}
+.btn-outline-brand:hover{ transform:translateY(-2px); }
+.form-control, .form-select{
+  border-radius:10px;
+  transition:border-color .2s var(--ease), box-shadow .2s var(--ease), transform .15s var(--ease);
+}
+.form-control:focus, .form-select:focus{
+  border-color:var(--brand-blue);
+  box-shadow:0 0 0 4px rgba(1,109,181,.14);
+  transform:translateY(-1px);
+}
+.badge-soft, .badge-soft-orange{
+  transition:transform .2s var(--ease);
+}
+
+/* ---------- Top bar ---------- */
+.topbar{
+  background:linear-gradient(120deg,var(--brand-blue) 0%, var(--brand-blue-dark) 100%);
+  color:#fff;
+  padding:18px 0;
+  position:relative;
+  overflow:hidden;
+}
+.topbar::after{
+  content:"";
+  position:absolute; right:-60px; top:-60px;
+  width:220px;height:220px;border-radius:50%;
+  background:var(--brand-orange);
+  opacity:.18;
+  animation:breathe 6s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{ transform:scale(1); opacity:.16; }
+  50%{ transform:scale(1.1); opacity:.26; }
+}
+.step-pill{
+  font-size:.75rem; font-weight:600; letter-spacing:.06em;
+  text-transform:uppercase; color:#fff; opacity:.85;
+}
+
+.card-clean{
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:#fff;
+}
+.shadow-soft{box-shadow:0 10px 30px rgba(1,109,181,.08);}
+
+.btn-brand{
+  background:var(--brand-blue); border:none; color:#fff;
+  font-weight:600; border-radius:10px;
+}
+.btn-brand:hover{background:var(--brand-blue-dark); color:#fff;}
+.btn-orange{
+  background:var(--brand-orange); border:none; color:#fff;
+  font-weight:600; border-radius:10px;
+}
+.btn-orange:hover{background:var(--brand-orange-dark); color:#fff;}
+.btn-outline-brand{
+  border:1.5px solid var(--brand-blue); color:var(--brand-blue); font-weight:600; border-radius:10px;
+}
+.btn-outline-brand:hover{background:var(--brand-blue); color:#fff;}
+
+.badge-soft{
+  background:rgba(1,109,181,.08);
+  color:var(--brand-blue);
+  font-weight:600;
+  border-radius:999px;
+  padding:.4em .9em;
+  font-size:.8rem;
+}
+.badge-soft-orange{
+  background:rgba(244,134,52,.12);
+  color:var(--brand-orange-dark);
+  font-weight:600;
+  border-radius:999px;
+  padding:.4em .9em;
+  font-size:.8rem;
+}
+
+/* ============ REEL-FRAME — la "ruletita": mismo cuadro para las 3 fases,
+   con un tema de color propio para agua / premio / accesitarios, y una
+   versión clara reutilizada en el resumen de premios (ver más abajo). ============ */
+.reel-frame{
+  position:relative;
+  height:150px;
+  border-radius:22px;
+  overflow:hidden;
+  border:3px solid rgba(255,255,255,.22);
+  background:rgba(255,255,255,.05);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto;
+  max-width:600px;
+  transition:border-color .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease);
+}
+.reel-frame::before, .reel-frame::after{
+  content:""; position:absolute; left:0; right:0; height:36%;
+  pointer-events:none; z-index:2;
+}
+.reel-frame::before{ top:0; background:linear-gradient(180deg, rgba(1,20,31,.85), rgba(1,20,31,0)); }
+.reel-frame::after{ bottom:0; background:linear-gradient(0deg, rgba(1,20,31,.85), rgba(1,20,31,0)); }
+.reel-center-line{
+  position:absolute; left:14px; right:14px; top:50%; height:2px;
+  background:rgba(255,255,255,.32); transform:translateY(-1px); z-index:1;
+}
+.reel-frame.spinning .reveal-name-big{
+  animation:reelBlur .05s linear infinite;
+}
+@keyframes reelBlur{
+  0%{transform:translateY(-7px); opacity:.55;}
+  50%{transform:translateY(0); opacity:1;}
+  100%{transform:translateY(7px); opacity:.55;}
+}
+
+/* tema AL AGUA */
+.reveal-overlay.phase-agua .reel-frame{ border-color:rgba(143,199,239,.3); }
+.reveal-overlay.phase-agua .reel-frame.locked{
+  border-color:#8fc7ef;
+  box-shadow:0 0 0 8px rgba(143,199,239,.16);
+  background:rgba(143,199,239,.08);
+}
+
+/* tema PREMIO — más grande, dorado, con brillo continuo mientras se espera */
+.reveal-overlay.phase-premio .reel-frame{
+  height:200px;
+  border-color:rgba(244,134,52,.35);
+}
+.reveal-overlay.phase-premio .reel-frame.locked{
+  border-color:var(--brand-orange);
+  box-shadow:0 0 0 10px rgba(244,134,52,.22);
+  background:rgba(244,134,52,.1);
+  animation:winnerGlow 1.5s ease-in-out infinite;
+}
+@keyframes winnerGlow{
+  0%,100%{ box-shadow:0 0 0 10px rgba(244,134,52,.22); }
+  50%{ box-shadow:0 0 0 20px rgba(244,134,52,.34); }
+}
+
+/* tema ACCESITARIOS — más compacto y discreto */
+.reveal-overlay.phase-acces .reel-frame{
+  height:110px;
+  border-color:rgba(159,185,198,.25);
+}
+.reveal-overlay.phase-acces .reel-frame.locked{
+  border-color:#9fb9c6;
+  box-shadow:0 0 0 6px rgba(159,185,198,.14);
+  background:rgba(159,185,198,.08);
+}
+
+/* ---- Versión CLARA del reel-frame, reutilizada en el resumen de premios
+   (por premio y en el resumen final): mismo cuadro, mismo brillo dorado. ---- */
+.reel-frame-result{
+  position:relative;
+  height:110px;
+  border-radius:18px;
+  overflow:hidden;
+  border:3px solid var(--brand-orange);
+  background:linear-gradient(180deg,#fff8f1,#fdeee0 50%,#fff8f1);
+  box-shadow:0 0 0 6px rgba(244,134,52,.14);
+  display:flex; align-items:center; justify-content:center;
+  margin:0 auto 16px;
+  max-width:440px;
+  animation:winnerGlow 2.2s ease-in-out infinite, liveIn .45s var(--ease) both;
+}
+.reel-frame-result .winner-name{ margin:0; }
+
+/* ============ OVERLAY DE REVELADO — PANTALLA COMPLETA ============ */
+.reveal-overlay{
+  position:fixed; inset:0; z-index:2000;
+  display:flex; align-items:center; justify-content:center;
+}
+.reveal-backdrop{
+  position:absolute; inset:0;
+  background:radial-gradient(circle at 30% 20%, var(--brand-blue-dark), #01263f 75%);
+  transition:background .4s ease;
+}
+/* ---- Fases del revelado: cada una con su propio look ---- */
+.reveal-overlay.phase-agua .reveal-backdrop{
+  background:radial-gradient(circle at 30% 20%, var(--brand-blue-dark), #01263f 75%);
+}
+.reveal-overlay.phase-agua .reveal-eyebrow{ color:#8fc7ef; }
+.reveal-overlay.phase-agua .reveal-name-big{ font-size:clamp(1.9rem,6vw,3.6rem); }
+
+.reveal-overlay.phase-premio .reveal-backdrop{
+  background:radial-gradient(circle at 50% 25%, #0a3a5c, #01263f 70%),
+             radial-gradient(circle at 50% 100%, rgba(244,134,52,.45), transparent 60%);
+}
+.reveal-overlay.phase-premio .reveal-eyebrow{
+  color:var(--brand-orange); font-size:1.15rem; font-weight:800;
+}
+.reveal-overlay.phase-premio .reveal-name-big{
+  font-size:clamp(1.9rem,6vw,3.6rem);
+  text-shadow:0 6px 34px rgba(244,134,52,.45);
+}
+
+.reveal-overlay.phase-acces .reveal-backdrop{
+  background:radial-gradient(circle at 50% 30%, #123449, #01141f 78%);
+}
+.reveal-overlay.phase-acces .reveal-eyebrow{ color:#9fb9c6; font-size:.82rem; }
+.reveal-overlay.phase-acces .reveal-name-big{ font-size:clamp(1.5rem,5vw,2.7rem); }
+
+.reveal-action-btn{
+  margin-top:34px;
+  min-width:220px;
+  padding:.7em 2.2em;
+  font-size:1.05rem;
+  border-radius:999px;
+}
+
+/* ---- Portada del sorteo ---- */
+.portada-card{ max-width:640px; }
+.reveal-confetti-layer{
+  position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:1;
+}
+.reveal-content{
+  position:relative; z-index:2;
+  text-align:center; color:#fff;
+  padding:40px 24px;
+  max-width:92vw;
+  animation:fadeSection .25s ease-out both;
+}
+.reveal-eyebrow{
+  font-family:'Space Grotesk',sans-serif;
+  text-transform:uppercase; letter-spacing:.16em;
+  font-weight:700; font-size:.95rem;
+  color:var(--brand-orange);
+  margin-bottom:22px;
+}
+/* ---- Caption de transición al pasar del "agua"/accesitarios al PREMIO:
+   deja claro, antes de que empiece a girar, que se está pasando a la
+   fase del premio y no a otra ronda cualquiera. ---- */
+.reveal-transition-caption{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.1em;
+  font-size:clamp(1.3rem,4.5vw,2.1rem);
+  color:var(--brand-orange);
+  text-shadow:0 6px 30px rgba(244,134,52,.45);
+  margin-bottom:26px;
+  animation:transitionPulse 1s ease-in-out infinite;
+}
+@keyframes transitionPulse{
+  0%,100%{ opacity:.55; transform:scale(.97); }
+  50%{ opacity:1; transform:scale(1.04); }
+}
+@media (prefers-reduced-motion: reduce){
+  .reveal-transition-caption{ animation:none; }
+}
+.reveal-name-big{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:800; line-height:1.06;
+  font-size:clamp(2.2rem,7.5vw,5.2rem);
+  word-break:break-word;
+}
+.reveal-id{
+  margin-top:14px; font-weight:600; letter-spacing:.03em;
+  color:rgba(255,255,255,.75); font-size:1.1rem;
+}
+.reveal-progress-track{
+  margin:30px auto 0; width:min(360px,70vw); height:5px;
+  border-radius:999px; background:rgba(255,255,255,.16); overflow:hidden;
+}
+.reveal-progress-bar{
+  height:100%; width:100%;
+  background:var(--brand-orange);
+  transition:width .08s linear;
+}
+.reveal-countdown{
+  margin-top:12px;
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700;
+  letter-spacing:.04em;
+  font-size:1rem;
+  color:rgba(255,255,255,.8);
+  min-height:1.4em;
+}
+@media (prefers-reduced-motion: reduce){
+  .reel-frame.spinning .reveal-name-big{ animation:none; }
+  .reel-frame.locked, .reel-frame-result{ animation:none; }
+}
+
+/* winner burst */
+.winner-stage{
+  position:relative;
+  border-radius:20px;
+  padding:34px 20px;
+  text-align:center;
+  background:radial-gradient(circle at 50% 0%, rgba(1,109,181,.09), transparent 60%);
+  overflow:hidden;
+}
+.winner-crown{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:64px;height:64px;border-radius:50%;
+  background:linear-gradient(135deg,var(--brand-orange),var(--brand-orange-dark));
+  color:#fff; font-size:1.8rem; margin-bottom:10px;
+  box-shadow:0 10px 24px rgba(244,134,52,.35);
+  animation:popIn .5s cubic-bezier(.2,1.4,.4,1) both;
+}
+@keyframes popIn{
+  0%{ transform:scale(0) rotate(-30deg); opacity:0;}
+  70%{ transform:scale(1.15) rotate(6deg); opacity:1;}
+  100%{ transform:scale(1) rotate(0);}
+}
+.winner-name{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700;
+  font-size:clamp(1.6rem,4vw,2.6rem);
+  color:var(--brand-blue-dark);
+  animation:riseIn .3s ease-out both .8s;
+}
+.winner-id{
+  color:var(--muted); font-weight:600; letter-spacing:.03em;
+  animation:riseIn .3s ease-out both .2s;
+}
+@keyframes riseIn{
+  from{opacity:0; transform:translateY(14px);}
+  to{opacity:1; transform:translateY(0);}
+}
+.confetti-piece{
+  position:absolute; top:-10px; width:8px; height:14px; opacity:.9;
+  animation:fall linear forwards;
+  border-radius:2px;
+}
+@keyframes fall{
+  to{ transform:translateY(100vh) rotate(540deg); opacity:0; }
+}
+
+/* accesitario cards */
+.acces-card{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px 16px;
+  background:#fbfdfe;
+  animation:slideUp .35s ease-out both;
+}
+@keyframes slideUp{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+.acces-rank{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(1,109,181,.1); color:var(--brand-blue);
+  font-weight:700; font-size:.85rem;
+}
+
+/* people-in-water chip */
+.water-chip{
+  border:1.5px dashed var(--brand-blue);
+  color:var(--brand-blue-dark);
+  border-radius:999px;
+  padding:.35em 1em;
+  font-weight:600; font-size:.9rem;
+  background:rgba(1,109,181,.05);
+  animation:slideUp .3s ease-out both;
+}
+
+.progress-thin{height:6px; border-radius:999px;}
+.progress-thin .progress-bar{background:var(--brand-orange);}
+
+.timeline-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--line);
+}
+.timeline-dot.done{background:var(--brand-orange);}
+.timeline-dot.active{background:var(--brand-blue); box-shadow:0 0 0 4px rgba(1,109,181,.18);}
+
+.table-clean thead th{
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.78rem; text-transform:uppercase; letter-spacing:.05em;
+  color:var(--muted); border-bottom:2px solid var(--line);
+}
+.table-clean td{vertical-align:middle;}
+
+.section-fade{animation:fadeSection .35s ease-out both;}
+@keyframes fadeSection{ from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:translateY(0);} }
+
+.hint{color:var(--muted); font-size:.86rem;}
+
+footer.app-footer{
+  color:var(--muted); font-size:.82rem; padding:26px 0 40px;
+}
+
+@media (prefers-reduced-motion: reduce){
+  .winner-crown, .winner-name, .winner-id, .acces-card, .water-chip{animation:none;}
+  .card-clean, .badge-soft, .badge-soft-orange, .table-clean tbody tr{animation:none;}
+  .topbar::after{animation:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ TOP BAR ============ -->
+<div class="topbar">
+  <div class="container d-flex align-items-center gap-3">
+    <div>
+      <div class="fw-bold" style="font-family:'Space Grotesk',sans-serif; font-size:1.15rem;">Sorteos ELPU</div>
+      <div class="step-pill" id="topStepLabel">Paso 1 · Configuración</div>
+    </div>
+    <div class="ms-auto d-none d-md-flex align-items-center gap-2" id="poolStatusTop"></div>
+  </div>
+</div>
+
+<div class="container py-4 py-md-5">
+
+  <!-- ============ SCREEN 1: CONFIG ============ -->
+  <section id="screen-config" class="section-fade">
+    <div class="row g-4">
+      <div class="col-lg-7">
+        <div class="card-clean shadow-soft p-4 mb-4">
+          <h2 class="h4 mb-3">1 · Datos del sorteo</h2>
+          <div class="row g-3">
+            <div class="col-sm-8">
+              <label class="form-label fw-semibold">Nombre del sorteo</label>
+              <input type="text" class="form-control" id="sorteoName" value="Sorteo de Premios">
+            </div>
+            <div class="col-12">
+              <label class="form-label fw-semibold">Descripción (opcional)</label>
+              <textarea class="form-control" id="sorteoDesc" rows="2" placeholder="Ej. Sorteo anual de fin de año para colaboradores."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-clean shadow-soft p-4 p-md-4 mb-4">
+          <h2 class="h4 mb-1">2 · Cargar participantes</h2>
+          <p class="hint mb-3">Sube un archivo <strong>.txt</strong> o <strong>.csv</strong>. Cada línea debe tener el código y el nombre, por ejemplo:<br>
+          <code>3567890 Perez Perez, Pepito</code> o <code>3567890 Perez Perez Pepito</code></p>
+
+          <input class="form-control" type="file" id="fileInput" accept=".txt,.csv">
+
+          <div class="d-flex align-items-center gap-2 mt-3">
+            <button class="btn btn-sm btn-outline-brand" id="btnDemoData">Generar datos de prueba (100,000)</button>
+            <span class="hint" id="parseStatus"></span>
+          </div>
+        </div>
+
+        <div class="card-clean shadow-soft p-4">
+          <h2 class="h4 mb-3">3 · Parámetros del sorteo</h2>
+
+          <div class="row g-3">
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Número de premios</label>
+              <input type="number" min="1" class="form-control" id="numPremios" value="3">
+            </div>
+            <div class="col-sm-6"></div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Personas "al agua" por premio</label>
+              <select class="form-select" id="alAguaMode">
+                <option value="1">1 persona</option>
+                <option value="2" selected>2 personas</option>
+                <option value="3">3 personas</option>
+                <option value="X">Personalizado (definir en cada sorteo)</option>
+              </select>
+            </div>
+            <div class="col-sm-6">
+              <label class="form-label fw-semibold">Accesitarios por premio</label>
+              <select class="form-select" id="accesMode">
+                <option value="1" selected>1 accesitario</option>
+                <option value="2">2 accesitarios</option>
+                <option value="X">Personalizado (definir en cada sorteo)</option>
+              </select>
+            </div>
+          </div>
+
+          <hr class="my-4">
+          <label class="form-label fw-semibold mb-2">Duración de la animación de cada revelado (segundos)</label>
+          <p class="hint mb-3">Controla cuánto tiempo gira la ruletita de nombres antes de bloquearse en la persona sorteada. Se muestra un temporizador visible durante el giro.</p>
+          <div class="row g-3">
+            <div class="col-sm-4">
+              <label class="form-label">"Al agua"</label>
+              <select class="form-select" id="durAgua">
+                <option value="3">3 segundos</option>
+                <option value="4">4 segundos</option>
+                <option value="5" selected>5 segundos</option>
+                <option value="6">6 segundos</option>
+                <option value="8">8 segundos</option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <label class="form-label">Premio</label>
+              <select class="form-select" id="durPremio">
+                <option value="3">3 segundos</option>
+                <option value="4">4 segundos</option>
+                <option value="5">5 segundos</option>
+                <option value="6">6 segundos</option>
+                <option value="7" selected>7 segundos</option>
+                <option value="8">8 segundos</option>
+              </select>
+            </div>
+            <div class="col-sm-4">
+              <label class="form-label">Accesitarios</label>
+              <select class="form-select" id="durAcces">
+                <option value="3">3 segundos</option>
+                <option value="4">4 segundos</option>
+                <option value="5" selected>5 segundos</option>
+                <option value="6">6 segundos</option>
+                <option value="8">8 segundos</option>
+              </select>
+            </div>
+          </div>
+
+          <p class="hint mt-3 mb-0">Cada revelado se muestra en pantalla completa, uno a la vez, y avanza <strong>manualmente</strong>: pulsas "Revelar" para mostrar a la persona y "Continuar" para pasar a la siguiente. Nada cambia de forma automática. Primero cada persona "al agua", luego el premio, y por último los accesitarios. Los nombres anteriores no quedan visibles en la página — solo aparecen juntos en el resumen del premio, al final de cada ronda.</p>
+
+          <hr class="my-4">
+          <label class="form-label fw-semibold mb-2">Nombres de los premios</label>
+          <div id="prizeNamesWrap" class="row g-2 mb-2"></div>
+          <p class="hint mb-0">Se generan automáticamente según el número de premios. Puedes editarlos.</p>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <div class="card-clean shadow-soft p-4 h-100 d-flex flex-column">
+          <h2 class="h5 mb-3">Resumen antes de iniciar</h2>
+          <ul class="list-unstyled mb-4" id="configSummaryList">
+            <li class="d-flex justify-content-between py-2 border-bottom"><span class="hint">Participantes cargados</span><strong id="sumParticipantes">0</strong></li>
+            <li class="d-flex justify-content-between py-2 border-bottom"><span class="hint">Líneas no válidas</span><strong id="sumInvalidas">0</strong></li>
+            <li class="d-flex justify-content-between py-2 border-bottom"><span class="hint">Premios</span><strong id="sumPremios">-</strong></li>
+            <li class="d-flex justify-content-between py-2 border-bottom"><span class="hint">Al agua por premio</span><strong id="sumAlAgua">-</strong></li>
+            <li class="d-flex justify-content-between py-2"><span class="hint">Accesitarios por premio</span><strong id="sumAcces">-</strong></li>
+          </ul>
+          <div class="mt-auto">
+            <button class="btn btn-orange btn-lg w-100" id="btnIniciar" disabled>Iniciar sorteo</button>
+            <p class="hint mt-2 mb-0" id="startWarning">Carga un archivo de participantes para continuar.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 2: PORTADA DEL SORTEO ============ -->
+  <section id="screen-portada" class="section-fade d-none">
+    <div class="d-flex justify-content-center">
+      <div class="card-clean shadow-soft p-5 text-center portada-card w-100">
+
+        <div id="blockPortadaIntro">
+          <div class="badge-soft mb-2">Sorteo</div>
+          <h1 class="h2 mb-2" id="portadaNombre">Sorteo de Premios</h1>
+          <p class="hint mb-1"><strong id="portadaParticipantes">0</strong> participantes en el sorteo</p>
+          <p class="hint mb-4 d-none" id="portadaDescBlock"></p>
+          <button class="btn btn-orange btn-lg px-5 mt-2" id="btnPortadaComenzar">Comenzar</button>
+        </div>
+
+        <div id="blockPortadaStats" class="d-none">
+          <div class="badge-soft-orange mb-3">Todo listo</div>
+          <div class="row g-3 mb-4">
+            <div class="col-6">
+              <div class="hint text-uppercase" style="letter-spacing:.06em;">Personas sorteadas</div>
+              <div class="fw-bold fs-2 text-brand" id="portadaStatsParticipantes">0</div>
+            </div>
+            <div class="col-6">
+              <div class="hint text-uppercase" style="letter-spacing:.06em;">Número de premios</div>
+              <div class="fw-bold fs-2 text-brand" id="portadaStatsPremios">0</div>
+            </div>
+          </div>
+          <button class="btn btn-orange btn-lg px-5" id="btnPortadaIniciar">Iniciar sorteo del primer premio</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCREEN 3: DRAW ============ -->
+  <section id="screen-sorteo" class="section-fade d-none">
+
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-3">
+      <div>
+        <span class="badge-soft" id="drawPrizeCounter">Premio 1 de 3</span>
+        <h2 class="h3 mt-2 mb-0" id="drawPrizeName">Primer premio</h2>
+      </div>
+      <div class="d-flex align-items-center gap-4">
+        <div class="text-end">
+          <div class="hint">Personas restantes en la urna</div>
+          <div class="fw-bold text-brand fs-4" id="poolCount">0</div>
+        </div>
+        <button class="btn btn-outline-brand" type="button" data-bs-toggle="modal" data-bs-target="#modalHistorial">
+          Premios anteriores <span class="badge-soft ms-1" id="historyCountBadge">0</span>
+        </button>
+      </div>
+    </div>
+    <div class="progress progress-thin mb-4"><div class="progress-bar" id="prizeProgressBar" style="width:0%"></div></div>
+
+    <div class="row g-4">
+      <div class="col-lg-8 mx-auto">
+
+        <!-- Panel de control: dispara la secuencia completa por pantalla completa -->
+        <div class="card-clean shadow-soft p-4 mb-4 d-none" id="blockControlSorteo">
+          <h3 class="h5 mb-3">Listo para sortear</h3>
+          <p class="hint" id="controlDescripcion">Se mostrará, en pantalla completa, primero cada persona "al agua", luego el premio y por último los accesitarios.</p>
+
+          <div id="alAguaCustomWrap" class="d-none mb-3">
+            <label class="form-label fw-semibold">¿Cuántas personas salen al agua en este premio?</label>
+            <div class="input-group" style="max-width:220px;">
+              <input type="number" min="1" class="form-control" id="alAguaCustomInput" value="2">
+              <button class="btn btn-outline-brand" id="btnConfirmAlAguaCustom">OK</button>
+            </div>
+          </div>
+          <div id="accesCustomWrap" class="d-none mb-3">
+            <label class="form-label fw-semibold">¿Cuántos accesitarios en este premio?</label>
+            <div class="input-group" style="max-width:220px;">
+              <input type="number" min="1" class="form-control" id="accesCustomInput" value="1">
+              <button class="btn btn-outline-brand" id="btnConfirmAccesCustom">OK</button>
+            </div>
+          </div>
+
+          <button class="btn btn-orange btn-lg" id="btnIniciarSecuencia">Iniciar sorteo de este premio</button>
+          <div class="mt-3 hint" id="secuenciaEstado"></div>
+        </div>
+
+        <!-- Step D: resumen del premio (visible recién al terminar la secuencia) -->
+        <div class="card-clean shadow-soft p-4 d-none" id="blockResumenPremio">
+          <h3 class="h5 mb-3">Resumen del premio</h3>
+          <div id="resumenPremioBody"></div>
+          <div class="d-flex gap-2 mt-3">
+            <button class="btn btn-orange" id="btnSiguientePremio">Siguiente sorteo</button>
+            <button class="btn btn-outline-brand d-none" id="btnIrResumenFinal">Ver resumen final</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ POPUP: PREMIOS ANTERIORES ============ -->
+  <div class="modal fade" id="modalHistorial" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content" style="border-radius:16px; border:1px solid var(--line);">
+        <div class="modal-header">
+          <h3 class="h5 mb-0">Premios ya entregados</h3>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="historyList" class="d-flex flex-column gap-3"></div>
+          <p class="hint mb-0" id="historyEmpty">Aún no hay premios entregados.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ OVERLAY DE REVELADO (pantalla completa, uno por uno, manual) ============ -->
+  <div id="revealOverlay" class="reveal-overlay d-none">
+    <div class="reveal-backdrop"></div>
+    <div id="revealConfettiLayer" class="reveal-confetti-layer"></div>
+    <div class="reveal-content">
+      <div class="reveal-transition-caption d-none" id="revealTransitionCaption">Pasando al sorteo del premio…</div>
+      <div class="reveal-eyebrow" id="revealLabel">AL AGUA</div>
+      <div class="reel-frame" id="revealReelFrame">
+        <div class="reel-center-line"></div>
+        <div class="reveal-name-big" id="revealNameBig">—</div>
+      </div>
+      <div class="reveal-progress-track d-none" id="revealProgressTrack">
+        <div class="reveal-progress-bar" id="revealProgressBar" style="width:100%"></div>
+      </div>
+      <div class="reveal-countdown" id="revealCountdown"></div>
+      <div class="reveal-id" id="revealIdBig"></div>
+      <button class="btn btn-orange reveal-action-btn" id="btnRevealAction">Revelar</button>
+    </div>
+  </div>
+
+
+  <!-- ============ SCREEN 3: FINAL SUMMARY ============ -->
+  <section id="screen-final" class="section-fade d-none">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
+      <div>
+        <span class="badge-soft-orange">Sorteo finalizado</span>
+        <h2 class="h3 mt-2 mb-0">Resumen final de premios</h2>
+      </div>
+      <div class="d-flex gap-2">
+        <button class="btn btn-outline-brand" id="btnDescargarCSV">Descargar resultados (CSV)</button>
+        <button class="btn btn-brand" id="btnReiniciar">Nuevo sorteo</button>
+      </div>
+    </div>
+
+    <div id="finalCards" class="d-flex flex-column gap-3"></div>
+  </section>
+
+</div>
+
+<footer class="app-footer text-center">
+  Sorteos ELPU
+</footer>
+
+<script>
+/* =========================================================================
+   ALEATORIEDAD SEGURA
+   - Se usa crypto.getRandomValues (CSPRNG del navegador) en vez de Math.random.
+   - Se aplica "rejection sampling" para eliminar el sesgo de módulo.
+   - Cada extracción retira al elegido de la "pool" mediante swap-with-last,
+     lo cual es O(1) y soporta poblaciones de 100,000+ sin degradar el
+     rendimiento (a diferencia de un shuffle completo o un splice central).
+========================================================================= */
+function secureRandomInt(maxExclusive){
+  if(maxExclusive <= 0) throw new Error('maxExclusive debe ser > 0');
+  const range = maxExclusive;
+  const bytesNeeded = Math.ceil(Math.log2(range)/8) || 1;
+  const maxValid = Math.floor(256**bytesNeeded / range) * range;
+  const arr = new Uint8Array(bytesNeeded);
+  while(true){
+    crypto.getRandomValues(arr);
+    let val = 0;
+    for(let i=0;i<bytesNeeded;i++){ val = val*256 + arr[i]; }
+    if(val < maxValid) return val % range;
+  }
+}
+
+// Extrae UN elemento al azar de un array (mutándolo) en O(1)
+function drawOne(pool){
+  if(pool.length === 0) return null;
+  const idx = secureRandomInt(pool.length);
+  const last = pool.length - 1;
+  const chosen = pool[idx];
+  pool[idx] = pool[last];
+  pool.pop();
+  return chosen;
+}
+
+function drawMany(pool, n){
+  const out = [];
+  for(let i=0;i<n && pool.length>0;i++){ out.push(drawOne(pool)); }
+  return out;
+}
+
+/* =========================================================================
+   PARSEO DE ARCHIVO
+   Formatos soportados por línea:
+     "3567890 Perez Perez, Pepito"
+     "3567890 Perez Perez Pepito"
+   Regla: el primer token (dígitos) es el código; el resto de la línea,
+   con o sin coma, es el nombre completo tal cual aparece.
+========================================================================= */
+function parseParticipants(text){
+  const lines = text.split(/\r\n|\n|\r/);
+  const participants = [];
+  let invalid = 0;
+  for(const raw of lines){
+    const line = raw.trim();
+    if(!line) continue;
+    const m = line.match(/^(\S+)\s+(.+)$/);
+    if(!m){ invalid++; continue; }
+    const id = m[1].trim();
+    const name = m[2].trim().replace(/\s{2,}/g,' ');
+    participants.push({ id, name });
+  }
+  return { participants, invalid };
+}
+
+/* =========================================================================
+   ESTADO GLOBAL
+========================================================================= */
+const state = {
+  allParticipants: [],   // copia completa (para historial / validaciones de id)
+  pool: [],               // participantes aún disponibles para ser sorteados
+  invalidLines: 0,
+  config: {
+    sorteoName: 'Sorteo de Premios',
+    sorteoDesc: '',
+    numPremios: 3,
+    alAguaMode: '2',       // '1' | '2' | '3' | 'X'
+    accesMode: '1',        // '1' | '2' | 'X'
+    prizeNames: [],
+    durAgua: 5,             // segundos de giro para "al agua"
+    durPremio: 7,           // segundos de giro para el premio
+    durAcces: 5              // segundos de giro para accesitarios
+  },
+  currentPrizeIndex: 0,
+  currentAlAguaCount: 0,
+  currentAccesCount: 0,
+  alAguaGroup: [],         // ya no se usa como candidatos; solo se limpia entre rondas (compat)
+  currentWinner: null,
+  currentAcces: [],
+  currentAlAguaSinPremio: [], // quienes salieron "al agua" en la ronda actual y no ganaron ni fueron accesitarios
+  results: [],             // { prizeName, winner, acces:[...], alAguaSinPremio:[...] }
+  eliminados: []           // registro GLOBAL y permanente de todo el que ya salió (al agua, ganador o accesitario)
+                            // de cualquier premio anterior: no puede volver a ser sorteado nunca más.
+};
+
+/* =========================================================================
+   UTILIDADES DE UI
+========================================================================= */
+const $ = (sel) => document.querySelector(sel);
+const $$ = (sel) => document.querySelectorAll(sel);
+
+function fmtPoolCount(){
+  $('#poolCount').textContent = state.pool.length.toLocaleString('es-PE');
+  const top = $('#poolStatusTop');
+  if(top){
+    top.innerHTML = `<span class="badge-soft" style="background:rgba(255,255,255,.15); color:#fff;">Urna: ${state.pool.length.toLocaleString('es-PE')} personas</span>`;
+  }
+}
+
+/* =========================================================================
+   PASO 1 · CONFIGURACIÓN
+========================================================================= */
+$('#fileInput').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if(!file) return;
+  $('#parseStatus').textContent = 'Leyendo archivo...';
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    const { participants, invalid } = parseParticipants(ev.target.result);
+    state.allParticipants = participants;
+    state.invalidLines = invalid;
+    $('#parseStatus').textContent = `Listo: ${participants.length.toLocaleString('es-PE')} participantes leídos.`;
+    updateConfigSummary();
+  };
+  reader.readAsText(file, 'utf-8');
+});
+
+$('#btnDemoData').addEventListener('click', () => {
+  $('#parseStatus').textContent = 'Generando datos de prueba...';
+  setTimeout(() => {
+    const nombres = ['Perez Perez','Garcia Lopez','Quispe Mamani','Flores Rojas','Huanca Ticona','Condori Apaza','Mendoza Vila','Rios Chambi','Torres Zea','Salas Nina'];
+    const propios = ['Pepito','Maria','Luis','Ana','Jose','Rosa','Carlos','Elena','Miguel','Lucia','Fernando','Carmen','Victor','Julia','Raul'];
+    const arr = [];
+    for(let i=0;i<100000;i++){
+      const id = String(3000000 + i);
+      const ape = nombres[i % nombres.length];
+      const nom = propios[(i*7) % propios.length];
+      // alterna formatos con y sin coma, como en los datos reales del usuario
+      const name = (i % 2 === 0) ? `${ape}, ${nom}` : `${ape} ${nom}`;
+      arr.push({ id, name });
+    }
+    state.allParticipants = arr;
+    state.invalidLines = 0;
+    $('#parseStatus').textContent = `Listo: ${arr.length.toLocaleString('es-PE')} participantes de prueba generados.`;
+    updateConfigSummary();
+  }, 30);
+});
+
+function buildPrizeNameInputs(){
+  const n = Math.max(1, parseInt($('#numPremios').value || '1', 10));
+  const wrap = $('#prizeNamesWrap');
+  const defaults = ['Primer premio','Segundo premio','Tercer premio','Cuarto premio','Quinto premio'];
+  const existing = state.config.prizeNames;
+  wrap.innerHTML = '';
+  for(let i=0;i<n;i++){
+    const val = existing[i] || defaults[i] || `Premio ${i+1}`;
+    const col = document.createElement('div');
+    col.className = 'col-sm-6';
+    col.innerHTML = `<input class="form-control prize-name-input" data-idx="${i}" value="${val.replace(/"/g,'&quot;')}">`;
+    wrap.appendChild(col);
+  }
+}
+$('#numPremios').addEventListener('input', () => { buildPrizeNameInputs(); updateConfigSummary(); });
+buildPrizeNameInputs();
+
+function updateConfigSummary(){
+  $('#sumParticipantes').textContent = state.allParticipants.length.toLocaleString('es-PE');
+  $('#sumInvalidas').textContent = state.invalidLines.toLocaleString('es-PE');
+  $('#sumPremios').textContent = $('#numPremios').value || '-';
+  const am = $('#alAguaMode').value;
+  const cm = $('#accesMode').value;
+  $('#sumAlAgua').textContent = am === 'X' ? 'Personalizado' : am;
+  $('#sumAcces').textContent = cm === 'X' ? 'Personalizado' : cm;
+
+  const ok = state.allParticipants.length > 0;
+  $('#btnIniciar').disabled = !ok;
+  $('#startWarning').textContent = ok ? '' : 'Carga un archivo de participantes para continuar.';
+}
+$('#alAguaMode').addEventListener('change', updateConfigSummary);
+$('#accesMode').addEventListener('change', updateConfigSummary);
+
+$('#btnIniciar').addEventListener('click', () => {
+  state.config.numPremios = Math.max(1, parseInt($('#numPremios').value || '1', 10));
+  state.config.alAguaMode = $('#alAguaMode').value;
+  state.config.accesMode = $('#accesMode').value;
+  state.config.prizeNames = Array.from($$('.prize-name-input')).map(inp => inp.value.trim() || 'Premio');
+  state.config.sorteoName = $('#sorteoName').value.trim() || 'Sorteo de Premios';
+  state.config.sorteoDesc = $('#sorteoDesc').value.trim();
+  state.config.durAgua = parseInt($('#durAgua').value, 10) || 5;
+  state.config.durPremio = parseInt($('#durPremio').value, 10) || 7;
+  state.config.durAcces = parseInt($('#durAcces').value, 10) || 5;
+
+  state.pool = state.allParticipants.slice();
+  state.currentPrizeIndex = 0;
+  state.results = [];
+
+  $('#screen-config').classList.add('d-none');
+  $('#screen-portada').classList.remove('d-none');
+  $('#topStepLabel').textContent = 'Paso 2 · Portada del sorteo';
+  renderPortada();
+});
+
+/* =========================================================================
+   PASO 2 · PORTADA DEL SORTEO
+   Primero se muestra el logo, el nombre del sorteo, cuántos participantes
+   hay y la descripción (si existe). Al pulsar "Comenzar" se revelan las
+   estadísticas (número de premios) y el botón para iniciar el primer premio.
+========================================================================= */
+function renderPortada(){
+  $('#portadaNombre').textContent = state.config.sorteoName;
+  $('#portadaParticipantes').textContent = state.allParticipants.length.toLocaleString('es-PE');
+
+  const descBlock = $('#portadaDescBlock');
+  if(state.config.sorteoDesc){
+    descBlock.textContent = state.config.sorteoDesc;
+    descBlock.classList.remove('d-none');
+  }else{
+    descBlock.classList.add('d-none');
+  }
+
+  $('#blockPortadaIntro').classList.remove('d-none');
+  $('#blockPortadaStats').classList.add('d-none');
+}
+
+$('#btnPortadaComenzar').addEventListener('click', () => {
+  $('#portadaStatsParticipantes').textContent = state.allParticipants.length.toLocaleString('es-PE');
+  $('#portadaStatsPremios').textContent = state.config.numPremios;
+  $('#blockPortadaIntro').classList.add('d-none');
+  $('#blockPortadaStats').classList.remove('d-none');
+});
+
+$('#btnPortadaIniciar').addEventListener('click', () => {
+  $('#screen-portada').classList.add('d-none');
+  $('#screen-sorteo').classList.remove('d-none');
+  $('#topStepLabel').textContent = 'Paso 3 · Sorteo en curso';
+  fmtPoolCount();
+  startPrizeRound();
+});
+
+
+/* =========================================================================
+   PASO 2 · SECUENCIA DE CADA PREMIO
+   Cada revelado (al agua, premio, accesitarios) se muestra en un overlay
+   de pantalla completa, uno a la vez. Nada se acumula en la página mientras
+   se está sorteando: el resumen conjunto solo aparece al terminar la ronda.
+========================================================================= */
+function openOverlay(){
+  $('#revealOverlay').classList.remove('d-none');
+  document.body.style.overflow = 'hidden';
+}
+function closeOverlay(){
+  $('#revealOverlay').classList.add('d-none');
+  $('#revealOverlay').classList.remove('winner-mode');
+  document.body.style.overflow = '';
+}
+
+function launchConfetti(container){
+  const colors = ['#016db5','#f48634','#ffffff','#014f85'];
+  for(let i=0;i<40;i++){
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = (Math.random()*100) + '%';
+    piece.style.background = colors[i % colors.length];
+    piece.style.animationDuration = (1.6 + Math.random()*1.2) + 's';
+    piece.style.animationDelay = (Math.random()*0.3) + 's';
+    container.appendChild(piece);
+    setTimeout(() => piece.remove(), 3200);
+  }
+}
+
+/* Revela UNA persona en pantalla completa, de forma MANUAL:
+   1) Se muestra el botón "Revelar". Nada avanza solo.
+   2) Al pulsarlo, gira brevemente (efecto visual) y se bloquea en el nombre.
+   3) El botón cambia a "Continuar" (o "Ver resumen" si es el último paso)
+      y la promesa se resuelve solo cuando el usuario vuelve a pulsar. */
+// Duración del "giro" de la ruletita según la fase: configurable desde el
+// paso 1 (Parámetros del sorteo → "Duración de la animación de cada
+// revelado"). Se guarda en state.config.durAgua / durPremio / durAcces,
+// en segundos, y aquí se convierte a milisegundos.
+function getSpinDurationMs(phaseClass){
+  const map = { agua: state.config.durAgua, premio: state.config.durPremio, acces: state.config.durAcces };
+  const secs = map[phaseClass] || 5;
+  return secs * 1000;
+}
+// Cada cuántos ms cambia el nombre mostrado mientras gira: en premio va un
+// poco más lento (más dramático), en las otras fases más rápido, para que
+// se alcancen a ver más nombres distintos durante el giro.
+const SPIN_TICK_BY_PHASE = { agua: 22, acces: 22, premio: 28 };
+
+function revealStep({ phaseClass, label, person, distractorPool, confetti = false, isLast = false }){
+  return new Promise((resolve) => {
+    const overlay = $('#revealOverlay');
+    const frame = $('#revealReelFrame');
+    const bigName = $('#revealNameBig');
+    const btn = $('#btnRevealAction');
+    const transitionCaption = $('#revealTransitionCaption');
+    const progressTrack = $('#revealProgressTrack');
+    const progressBar = $('#revealProgressBar');
+    const countdown = $('#revealCountdown');
+    let spinHandle = null;
+    let confettiInterval = null;
+
+    overlay.className = 'reveal-overlay phase-' + phaseClass;
+    frame.className = 'reel-frame';
+    $('#revealLabel').textContent = label;
+    bigName.textContent = '···';
+    $('#revealIdBig').textContent = '';
+    $('#revealConfettiLayer').innerHTML = '';
+    btn.textContent = 'Revelar';
+    btn.disabled = false;
+    progressTrack.classList.add('d-none');
+    progressBar.style.width = '100%';
+    countdown.textContent = '';
+
+    // Solo al pasar al PREMIO se muestra un aviso extra, para que quede
+    // claro que se está pasando a esa fase y no continuando con "al agua".
+    if(phaseClass === 'premio'){
+      transitionCaption.textContent = 'Pasando al sorteo del premio…';
+      transitionCaption.classList.remove('d-none');
+    }else{
+      transitionCaption.classList.add('d-none');
+    }
+
+    openOverlay();
+
+    function doReveal(){
+      btn.disabled = true;
+      transitionCaption.classList.add('d-none');
+      frame.classList.add('spinning');
+      progressTrack.classList.remove('d-none');
+      const spinStart = Date.now();
+      const spinDuration = getSpinDurationMs(phaseClass);
+      const tickDelay = SPIN_TICK_BY_PHASE[phaseClass] || 25;
+      const tick = () => {
+        const elapsed = Date.now() - spinStart;
+        if(elapsed >= spinDuration){
+          frame.classList.remove('spinning');
+          frame.classList.add('locked');
+          bigName.textContent = person.name;
+          $('#revealIdBig').textContent = `Código: ${person.id}`;
+          progressBar.style.width = '0%';
+          countdown.textContent = '';
+          progressTrack.classList.add('d-none');
+          if(confetti){
+            launchConfetti($('#revealConfettiLayer'));
+            confettiInterval = setInterval(() => launchConfetti($('#revealConfettiLayer')), 650);
+          }
+          btn.textContent = isLast ? 'Ver resumen' : 'Continuar ▸';
+          btn.disabled = false;
+          btn.onclick = closeStep;
+          return;
+        }
+        // Solo se muestra el NOMBRE mientras gira; el código/ID de la persona
+        // nunca se revela durante la animación, solo al bloquearse al final.
+        const p = distractorPool.length ? distractorPool[secureRandomInt(distractorPool.length)] : null;
+        bigName.textContent = p ? p.name : '···';
+
+        // Temporizador visible: cuenta regresiva en segundos + barra que se
+        // vacía, para que quede claro cuánto falta para que se revele.
+        const remainingMs = Math.max(0, spinDuration - elapsed);
+        const remainingSec = Math.ceil(remainingMs / 1000);
+        countdown.textContent = `Se revela en ${remainingSec}s…`;
+        progressBar.style.width = `${Math.max(0, 100 - (elapsed / spinDuration * 100))}%`;
+
+        spinHandle = setTimeout(tick, tickDelay);
+      };
+      tick();
+    }
+
+    function closeStep(){
+      clearTimeout(spinHandle);
+      if(confettiInterval){ clearInterval(confettiInterval); confettiInterval = null; }
+      resolve();
+    }
+
+    btn.onclick = doReveal;
+  });
+}
+
+function startPrizeRound(){
+  const i = state.currentPrizeIndex;
+  const total = state.config.numPremios;
+  const name = state.config.prizeNames[i] || `Premio ${i+1}`;
+
+  $('#drawPrizeCounter').textContent = `Premio ${i+1} de ${total}`;
+  $('#drawPrizeName').textContent = name;
+  $('#prizeProgressBar').style.width = `${Math.round((i/total)*100)}%`;
+
+  state.alAguaGroup = [];
+  state.currentWinner = null;
+  state.currentAcces = [];
+
+  const am = state.config.alAguaMode;
+  state.currentAlAguaCount = (am === 'X') ? null : parseInt(am, 10);
+
+  const cm = state.config.accesMode;
+  state.currentAccesCount = (cm === 'X') ? null : parseInt(cm, 10);
+
+  $('#alAguaCustomWrap').classList.toggle('d-none', am !== 'X');
+  $('#accesCustomWrap').classList.toggle('d-none', cm !== 'X');
+
+  $('#blockResumenPremio').classList.add('d-none');
+  $('#blockControlSorteo').classList.remove('d-none');
+  $('#btnIniciarSecuencia').disabled = false;
+  $('#secuenciaEstado').textContent = '';
+  $('#controlDescripcion').textContent =
+    `Cada persona se revela una por una y de forma manual: pulsa "Revelar" para mostrarla y "Continuar" para pasar a la siguiente. Nada avanza solo. Primero cada persona "al agua" (${am==='X'?'defines la cantidad abajo':state.currentAlAguaCount}), luego el premio, y por último ${cm==='X'?'los accesitarios que definas':'los accesitario(s)'}.`;
+
+  fmtPoolCount();
+}
+
+$('#btnConfirmAlAguaCustom').addEventListener('click', () => {
+  const v = Math.max(1, parseInt($('#alAguaCustomInput').value || '1', 10));
+  state.currentAlAguaCount = v;
+  $('#alAguaCustomWrap').classList.add('d-none');
+});
+$('#btnConfirmAccesCustom').addEventListener('click', () => {
+  const v = Math.max(1, parseInt($('#accesCustomInput').value || '1', 10));
+  state.currentAccesCount = v;
+  $('#accesCustomWrap').classList.add('d-none');
+});
+
+$('#btnIniciarSecuencia').addEventListener('click', async () => {
+  if(state.currentAlAguaCount == null){ alert('Define cuántas personas van al agua en este premio.'); return; }
+  if(state.currentAccesCount == null){ alert('Define cuántos accesitarios tendrá este premio.'); return; }
+
+  $('#btnIniciarSecuencia').disabled = true;
+
+  // --- Al agua: se saca DIRECTO de la urna principal (state.pool) y queda
+  // ELIMINADO de inmediato. "Ir al agua" significa PERDER: estas personas
+  // ya NO pueden ser ganador ni accesitario de este premio, ni de ninguno
+  // posterior, porque drawOne() ya las retiró para siempre de state.pool.
+  // A diferencia de la versión anterior, este grupo NUNCA vuelve a usarse
+  // como candidato a nada: es un registro de eliminados, no una bolsa.
+  const n = Math.min(state.currentAlAguaCount, state.pool.length);
+  const alAguaSinPremio = [];
+  for(let idx=0; idx<n; idx++){
+    $('#secuenciaEstado').textContent = `Sacando al agua: turno ${idx+1} de ${n}...`;
+    const person = drawOne(state.pool);
+    fmtPoolCount();
+    await revealStep({
+      phaseClass: 'agua',
+      label: `Al agua · turno ${idx+1} de ${n}`,
+      person,
+      distractorPool: state.allParticipants
+    });
+    alAguaSinPremio.push(person);
+  }
+  state.alAguaGroup = [];
+
+  // --- Premio: se saca SIEMPRE de la urna principal (state.pool), que ya
+  // no incluye a quienes fueron "al agua" en este premio. El ganador jamás
+  // puede ser alguien que ya perdió al ir "al agua". ---
+  $('#secuenciaEstado').textContent = 'Sorteando el premio...';
+  const winner = drawOne(state.pool);
+  state.currentWinner = winner;
+  fmtPoolCount();
+  await revealStep({
+    phaseClass: 'premio',
+    label: '¡Premio!',
+    person: winner,
+    distractorPool: state.allParticipants,
+    confetti: true
+  });
+
+  // --- Accesitarios: también se sacan SIEMPRE de la urna principal, nunca
+  // del grupo "al agua". El ganador ya fue retirado de state.pool arriba,
+  // así que jamás puede repetirse como accesitario. ---
+  const needed = state.currentAccesCount;
+  const chosenAcces = [];
+  for(let rank=1; rank<=needed; rank++){
+    if(state.pool.length === 0) break;
+    const person = drawOne(state.pool);
+    fmtPoolCount();
+    chosenAcces.push(person);
+    $('#secuenciaEstado').textContent = `Sacando accesitario ${rank} de ${needed}...`;
+    await revealStep({
+      phaseClass: 'acces',
+      label: `Accesitario ${rank} de ${needed}`,
+      person,
+      distractorPool: state.allParticipants,
+      isLast: rank === needed
+    });
+  }
+
+  state.currentAcces = chosenAcces;
+  state.currentAlAguaSinPremio = alAguaSinPremio;
+
+  closeOverlay();
+  $('#blockControlSorteo').classList.add('d-none');
+  renderResumenPremio();
+  $('#blockResumenPremio').classList.remove('d-none');
+});
+
+/* ---- Bloque de resultado UNIFICADO: se usa tanto en el resumen de cada
+   premio como en el resumen final, para que ambos luzcan exactamente igual. ---- */
+function renderResultBlock(r){
+  return `
+    <div class="badge-soft-orange mb-3">${r.prizeName}</div>
+    <div class="winner-stage mb-3">
+      <div class="winner-crown">🏆</div>
+      <div class="hint text-uppercase mb-1" style="letter-spacing:.08em;">Ganador</div>
+      <div class="reel-frame-result">
+        <div class="winner-name">${r.winner.name}</div>
+      </div>
+      <div class="winner-id">Código: ${r.winner.id}</div>
+    </div>
+    <div class="hint text-uppercase mb-2" style="letter-spacing:.06em;">Accesitarios</div>
+    <div class="d-flex flex-column gap-2">
+      ${r.acces.length
+        ? r.acces.map((p, idx) => `<div class="acces-card d-flex align-items-center gap-3"><span class="acces-rank">${idx+1}</span><div><div class="fw-semibold">${p.name}</div><div class="hint">Código: ${p.id}</div></div></div>`).join('')
+        : '<div class="hint">Sin accesitarios en este premio</div>'}
+    </div>
+  `;
+}
+
+/* ---- Personas que salieron "al agua" en la ronda y NO ganaron ni fueron
+   accesitarios: quedan eliminadas del sorteo para siempre a partir de aquí,
+   así que se muestran aparte para que quede claro y auditable. ---- */
+function renderAlAguaSinPremioBlock(list){
+  if(!list || list.length === 0) return '';
+  return `
+    <div class="mt-3 pt-3" style="border-top:1px dashed var(--line);">
+      <div class="hint text-uppercase mb-2" style="letter-spacing:.06em;">Fueron "al agua" y quedan eliminados del sorteo (no premiados)</div>
+      <div class="d-flex flex-column gap-2">
+        ${list.map(p => `<div class="water-chip d-flex align-items-center gap-3"><div><div class="fw-semibold">${p.name}</div><div class="hint">Código: ${p.id}</div></div></div>`).join('')}
+      </div>
+    </div>
+  `;
+}
+
+/* ---- Resumen del premio: aquí, y solo aquí, se ven juntos ganador + accesitarios ---- */
+function renderResumenPremio(){
+  const i = state.currentPrizeIndex;
+  const name = state.config.prizeNames[i] || `Premio ${i+1}`;
+  const w = state.currentWinner;
+  const acc = state.currentAcces;
+
+  const sinPremio = state.currentAlAguaSinPremio.slice();
+
+  $('#resumenPremioBody').innerHTML = renderResultBlock({ prizeName: name, winner: w, acces: acc });
+
+  state.results.push({ prizeName: name, winner: w, acces: acc.slice(), alAguaSinPremio: sinPremio });
+
+  // Registro global permanente: ganador + accesitarios + "al agua" sin
+  // premio de esta ronda. Todos quedan marcados como eliminados para
+  // siempre, ya sin verificar el motivo, porque ninguno puede volver a
+  // aparecer en un sorteo posterior.
+  state.eliminados.push(
+    { ...w, motivo: 'Ganador', premio: name },
+    ...acc.map((p, idx) => ({ ...p, motivo: `Accesitario ${idx+1}`, premio: name })),
+    ...sinPremio.map(p => ({ ...p, motivo: 'Al agua (sin premio)', premio: name }))
+  );
+
+  state.currentAlAguaSinPremio = [];
+  renderHistory();
+
+  const isLast = state.currentPrizeIndex >= state.config.numPremios - 1;
+  $('#btnSiguientePremio').classList.toggle('d-none', isLast);
+  $('#btnIrResumenFinal').classList.toggle('d-none', !isLast);
+}
+
+function renderHistory(){
+  const wrap = $('#historyList');
+  $('#historyEmpty').classList.toggle('d-none', state.results.length > 0);
+  const countBadge = $('#historyCountBadge');
+  if(countBadge) countBadge.textContent = state.results.length;
+  wrap.innerHTML = state.results.map((r) => `
+    <div class="border rounded-3 p-3" style="border-color:var(--line)!important;">
+      <div class="badge-soft mb-2">${r.prizeName}</div>
+      <div class="fw-semibold">${r.winner.name}</div>
+      <div class="hint mb-1">${r.winner.id}</div>
+      ${r.acces.length ? `<div class="hint">Accesitarios: ${r.acces.map(p=>p.name).join(', ')}</div>` : ''}
+      ${r.alAguaSinPremio && r.alAguaSinPremio.length ? `<div class="hint">Al agua (eliminados, sin premio): ${r.alAguaSinPremio.map(p=>p.name).join(', ')}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+$('#btnSiguientePremio').addEventListener('click', () => {
+  // Los datos del premio anterior NO se eliminan (quedan en state.results / historial).
+  // Solo se retiran de la urna el ganador y los accesitarios ya definidos (drawOne ya los quitó).
+  state.currentPrizeIndex++;
+  startPrizeRound();
+});
+
+$('#btnIrResumenFinal').addEventListener('click', () => {
+  showFinalSummary();
+});
+
+/* =========================================================================
+   PASO 3 · RESUMEN FINAL
+========================================================================= */
+function showFinalSummary(){
+  $('#screen-sorteo').classList.add('d-none');
+  $('#screen-final').classList.remove('d-none');
+  $('#topStepLabel').textContent = 'Paso 4 · Resumen final';
+
+  const wrap = $('#finalCards');
+  wrap.innerHTML = state.results.map((r) => `
+    <div class="card-clean shadow-soft p-4">
+      ${renderResultBlock(r)}
+    </div>
+  `).join('');
+}
+
+$('#btnDescargarCSV').addEventListener('click', () => {
+  const rows = [['Premio','Rol','Codigo','Nombre']];
+  state.results.forEach(r => {
+    rows.push([r.prizeName, 'Ganador', r.winner.id, r.winner.name]);
+    r.acces.forEach((p, i) => rows.push([r.prizeName, `Accesitario ${i+1}`, p.id, p.name]));
+    (r.alAguaSinPremio || []).forEach(p => rows.push([r.prizeName, 'Al agua (eliminado, sin premio)', p.id, p.name]));
+  });
+  const csv = rows.map(row => row.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'resultados_sorteo.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+$('#btnReiniciar').addEventListener('click', () => {
+  location.reload();
+});
+
+/* init */
+updateConfigSummary();
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
