@@ -5,7 +5,7 @@
 export const state = {
   config: {
     nombreSorteo: 'GRAN SORTEO DE TELEVISORES ELECTROPUNO - ZONA SUR',
-    descripcion: 'ELECTRO PUNO PREMIA TU PUNTUALIDAD.',
+    descripcion: 'EN ELECTRO PUNO PREMIAMOS TU PUNTUALIDAD.',
     numPremios: 1,
     numAlAgua: 1,
     numAccesitarios: 1,
@@ -27,7 +27,6 @@ export const state = {
 /**
  * Parsea una línea de participante.
  * Soporta:
- *   "10020064597 - MAMANI QUISPE MARIA"
  *   "3567890 Perez Perez, Pepito"
  *   "3567890 Perez Perez Pepito"
  */
@@ -95,7 +94,7 @@ export function leerArchivoComoTexto(file) {
 export function generarNombresPremios(cantidad, actuales = []) {
   const nombres = [];
   for (let i = 0; i < cantidad; i++) {
-    nombres.push(actuales[i] || `${i + 1}° TELEVISOR LG 55 PULGADAS`);
+    nombres.push(actuales[i] || `${i + 1}°. TELEVISOR LG 55 PULGADAS`);
   }
   return nombres;
 }
@@ -104,7 +103,7 @@ export function generarNombresPremios(cantidad, actuales = []) {
 export function generarDescripcionesPremios(cantidad, actuales = []) {
   const descripciones = [];
   for (let i = 0; i < cantidad; i++) {
-    descripciones.push(actuales[i] || 'ELECTRO PREMIA TU PUNTUALIDAD.');
+    descripciones.push(actuales[i] || 'EN ELECTRO PUNO PREMIAMOS TU PUNTUALIDAD.');
   }
   return descripciones;
 }
