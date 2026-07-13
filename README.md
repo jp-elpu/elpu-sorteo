@@ -29,7 +29,6 @@ Y abre http://localhost:8000
 ## Formato del archivo de participantes (.txt o .csv)
 Una persona por línea, cualquiera de estos formatos:
 ```
-10020064597 - MAMANI QUISPE MARIA
 3567890 Perez Perez, Pepito
 3567890 Perez Perez Pepito
 ```
