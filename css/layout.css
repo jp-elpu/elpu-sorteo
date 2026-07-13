@@ -17,9 +17,38 @@
 
 /* ---- Página de configuración ---- */
 #page-config {
-  max-width: 720px;
+  max-width: min(96vw, 1300px);
   margin: 0 auto;
   padding: 48px 24px 140px;
+}
+
+.config-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  align-items: start;
+  gap: 32px;
+}
+
+.config-col-izquierda {
+  min-width: 0;
+}
+
+.config-col-derecha-sticky {
+  position: sticky;
+  top: 24px;
+}
+
+.config-col-derecha .btn-primary {
+  margin-top: 20px;
+}
+
+@media (max-width: 860px) {
+  .config-grid {
+    grid-template-columns: 1fr;
+  }
+  .config-col-derecha-sticky {
+    position: static;
+  }
 }
 
 /* ---- Página de sorteo (fullscreen) ---- */
@@ -34,7 +63,7 @@
 
 .vista {
   width: 100%;
-  max-width: 780px;
+  max-width: min(94vw, 1400px);
   display: flex;
   flex-direction: column;
   align-items: center;

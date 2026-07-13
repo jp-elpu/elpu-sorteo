@@ -32,6 +32,9 @@
     </header>
 
     <form id="form-config" novalidate>
+    <div class="config-grid">
+
+    <div class="config-col-izquierda">
 
       <!-- Paso 1: Datos del sorteo -->
       <fieldset class="step">
@@ -57,7 +60,7 @@
           <input type="file" id="input-archivo" accept=".txt,.csv">
         </label>
 
-        <p class="hint">Cada línea: código y nombre. Ej. <code>10020064597 - MAMANI QUISPE MARIA</code> o <code>3567890 Perez Perez, Pepito</code></p>
+        <p class="hint">Cada línea: código y nombre. Ej. <code>10020 - Quispe Marcos</code> o <code>3567890 Perez Perez, Pepito</code></p>
 
         <div id="preview-participantes" class="preview hidden">
           <strong><span id="preview-count">0</span> participantes cargados</strong>
@@ -130,19 +133,29 @@
         </div>
       </fieldset>
 
-      <!-- Resumen antes de iniciar -->
-      <div class="resumen-previo" id="resumen-previo">
-        <p class="resumen-previo-title">Resumen antes de iniciar</p>
-        <ul class="resumen-previo-grid">
-          <li><span>Participantes cargados</span><strong id="rp-participantes">0</strong></li>
-          <li><span>Líneas no válidas</span><strong id="rp-invalidas">0</strong></li>
-          <li><span>Premios</span><strong id="rp-premios">1</strong></li>
-          <li><span>Al agua por premio</span><strong id="rp-al-agua">1</strong></li>
-          <li><span>Accesitarios por premio</span><strong id="rp-accesitarios">1</strong></li>
-        </ul>
-      </div>
+    </div>
 
-      <button type="submit" id="btn-iniciar-sorteo" class="btn-primary">Iniciar sorteo →</button>
+    <div class="config-col-derecha">
+      <div class="config-col-derecha-sticky">
+
+        <!-- Resumen antes de iniciar -->
+        <div class="resumen-previo" id="resumen-previo">
+          <p class="resumen-previo-title">Resumen antes de iniciar</p>
+          <ul class="resumen-previo-grid">
+            <li><span>Participantes cargados</span><strong id="rp-participantes">0</strong></li>
+            <li><span>Líneas no válidas</span><strong id="rp-invalidas">0</strong></li>
+            <li><span>Premios</span><strong id="rp-premios">1</strong></li>
+            <li><span>Al agua por premio</span><strong id="rp-al-agua">1</strong></li>
+            <li><span>Accesitarios por premio</span><strong id="rp-accesitarios">1</strong></li>
+          </ul>
+        </div>
+
+        <button type="submit" id="btn-iniciar-sorteo" class="btn-primary">Iniciar sorteo →</button>
+
+      </div>
+    </div>
+
+    </div>
     </form>
   </section>
 
