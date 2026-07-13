@@ -1,0 +1,147 @@
+/* ==========================================================
+   base.css — reset, variables globales, tipografía
+   ========================================================== */
+
+:root {
+  /* Tema config (claro / simple) — sin cambios, la configuración se mantiene sobria */
+  --config-bg: #F7F8FA;
+  --config-surface: #FFFFFF;
+  --config-border: #DDE1E6;
+  --config-text: #1C2430;
+  --config-text-muted: #6B7480;
+  --config-accent: #F7941D;
+  --config-accent-hover: #F7941D;
+  --config-error: #860d0d;
+
+  /* ============================================================
+     Tema "sorteo" (escenario en vivo: portada, premio, ruleta, resumen)
+     Paleta tomada del componente "Gran Sorteo" que compartiste:
+     degradado azul + burbujas + texto grueso con contorno.
+
+     Convención tipográfica (así se usa en reveal.css):
+       · TÍTULO    → blanco relleno + contorno AZUL   → .texto-contorno
+       · SUBTÍTULO → blanco relleno + contorno NARANJA → .texto-contorno.subtitulo
+       · CUERPO    → blanco (var(--sorteo-text-muted) es un blanco azulado suave)
+     ============================================================ */
+  --sorteo-bg-start: #1C74E0;
+  --sorteo-bg-end:   #0A4BB0;
+  --sorteo-bubble:   #FFFFFF;
+
+  --sorteo-text:        #FFFFFF; /* relleno del texto grande (títulos) */
+  --sorteo-title-edge:  #0A4BB0; /* contorno AZUL — títulos */
+  --sorteo-text-muted:  #EAF2FF; /* cuerpo: blanco (con un dejo azulado para no competir con los títulos) */
+
+  --sorteo-accent:      #F7941D; /* naranja — contorno de subtítulos, y color sólido de botones/código del ganador */
+  --sorteo-accent-2:    #F7941D; /* verde — "al agua" / accesitarios (antes celeste, cambiado a pedido) */
+
+  /* Paleta de confeti (blanco / naranja / azul, varias opacidades) — ver utils.js:iniciarConfeti */
+  --confeti-1: rgba(255,255,255,0.95);
+  --confeti-2: rgba(255,255,255,0.55);
+  --confeti-3: rgba(247,148,29,0.95);
+  --confeti-4: rgba(247,148,29,0.5);
+  --confeti-5: rgba(28,116,224,0.9);
+  --confeti-6: rgba(111,214,255,0.7);
+
+  /* Paneles "vidrio esmerilado" para que el contenido se lea sobre el azul */
+  --sorteo-panel-bg:      rgba(255,255,255,0.12);
+  --sorteo-panel-border:  rgba(255,255,255,0.35);
+  --sorteo-panel-bg-soft: rgba(255,255,255,0.07);
+
+  --font-display: 'Baloo 2', 'Arial Rounded MT Bold', var(--font-body);
+  --font-body: 'Nunito', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+
+  --radius: 10px;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+* , *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--config-text);
+  background: var(--config-bg);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  margin: 0 0 0.4em;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0 0 0.75em;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+}
+
+input, select, textarea {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+code {
+  font-family: var(--font-mono);
+  background: rgba(0,0,0,0.06);
+  padding: 0.1em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------- Footer fijo de marca (logo principal + secundario, visible en TODAS las pantallas, incluido el resumen final) ---------- */
+.footer-marca {
+  position: fixed;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: #FFFFFF;
+  border-radius: 999px;
+  padding: 8px 24px;
+  box-shadow: 0 8px 22px rgba(0,0,0,0.25);
+  pointer-events: none; /* es decorativo: nunca bloquea clics de los botones */
+}
+
+.footer-marca-logo {
+  height: clamp(26px, 5vw, 40px);
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+/* Separador sutil entre logo principal y secundario, solo cuando ambos son visibles. */
+.footer-marca-logo-principal:not([style*="display: none"]) + .footer-marca-logo-secundario:not([style*="display: none"]) {
+  padding-left: 18px;
+  border-left: 1px solid rgba(0,0,0,0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

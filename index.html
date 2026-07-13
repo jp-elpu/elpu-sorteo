@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Sorteos</title>
+
+<!-- ICONO DE LA PESTAÑA DEL NAVEGADOR (favicon): usa el mismo logo de la
+     portada — assets/logo/logo.png. Si el archivo no existe, el navegador
+     simplemente muestra su ícono por defecto (no rompe nada). -->
+<link rel="icon" type="image/png" href="assets/logo/logo.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/config.css">
+<link rel="stylesheet" href="css/reveal.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============================================================ -->
+  <!-- PÁGINA 1: CONFIGURACIÓN (tema simple / claro)                -->
+  <!-- ============================================================ -->
+  <section id="page-config" class="page active">
+    <header class="config-header">
+      <h1>Configurar sorteo</h1>
+      <p class="subtitle">Completa los datos, carga a los participantes y define los parámetros de la ronda.</p>
+    </header>
+
+    <form id="form-config" novalidate>
+
+      <!-- Paso 1: Datos del sorteo -->
+      <fieldset class="step">
+        <legend><span class="step-num">1</span> Datos del sorteo</legend>
+
+        <label class="field">
+          <span>Nombre del sorteo</span>
+          <input type="text" id="input-nombre" placeholder="Ej. Sorteo Aniversario 2026" value="GRAN SORTEO DE TELEVISORES ELECTROPUNO - ZONA SUR" required>
+        </label>
+
+        <label class="field">
+          <span>Descripción <em>(opcional)</em></span>
+          <textarea id="input-descripcion" rows="2" placeholder="Detalles adicionales del sorteo">ELECTRO PUNO PREMIA TU PUNTUALIDAD.</textarea>
+        </label>
+      </fieldset>
+
+      <!-- Paso 2: Cargar participantes -->
+      <fieldset class="step">
+        <legend><span class="step-num">2</span> Cargar participantes</legend>
+
+        <label class="field">
+          <span>Archivo .txt o .csv</span>
+          <input type="file" id="input-archivo" accept=".txt,.csv">
+        </label>
+
+        <p class="hint">Cada línea: código y nombre. Ej. <code>10020064597 - MAMANI QUISPE MARIA</code> o <code>3567890 Perez Perez, Pepito</code></p>
+
+        <div id="preview-participantes" class="preview hidden">
+          <strong><span id="preview-count">0</span> participantes cargados</strong>
+          <div id="preview-lista" class="preview-lista"></div>
+        </div>
+        <p id="error-archivo" class="error hidden"></p>
+      </fieldset>
+
+      <!-- Paso 3: Parámetros del sorteo -->
+      <fieldset class="step">
+        <legend><span class="step-num">3</span> Parámetros del sorteo</legend>
+
+        <div class="grid-2">
+          <label class="field">
+            <span>Número de premios</span>
+            <input type="number" id="input-num-premios" min="1" max="50" value="1">
+          </label>
+
+          <label class="field">
+            <span>Personas "al agua" por premio</span>
+            <select id="input-num-al-agua">
+              <option value="0">0 personas</option>
+              <option value="1" selected>1 persona</option>
+              <option value="2">2 personas</option>
+              <option value="3">3 personas</option>
+              <option value="4">4 personas</option>
+              <option value="5">5 personas</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Ganador</span>
+            <input type="text" value="1 ganador" disabled>
+          </label>
+
+          <label class="field">
+            <span>Accesitarios por premio</span>
+            <select id="input-num-accesitarios">
+              <option value="0">0 accesitarios</option>
+              <option value="1" selected>1 accesitario</option>
+              <option value="2">2 accesitarios</option>
+              <option value="3">3 accesitarios</option>
+              <option value="4">4 accesitarios</option>
+              <option value="5">5 accesitarios</option>
+            </select>
+          </label>
+        </div>
+
+        <p class="hint">Duración de la animación de cada revelado (segundos). La ruleta gira ese tiempo antes de bloquearse en la persona sorteada.</p>
+
+        <div class="grid-3">
+          <label class="field">
+            <span>"Al agua" (seg.)</span>
+            <input type="number" id="input-dur-al-agua" min="1" max="30" value="4">
+          </label>
+          <label class="field">
+            <span>Premio (seg.)</span>
+            <input type="number" id="input-dur-premio" min="1" max="30" value="6">
+          </label>
+          <label class="field">
+            <span>Accesitarios (seg.)</span>
+            <input type="number" id="input-dur-accesitario" min="1" max="30" value="4">
+          </label>
+        </div>
+
+        <div class="field">
+          <span>Nombres, descripción e imagen de los premios</span>
+          <p class="hint" style="margin-top:2px;">La descripción es opcional y se muestra brevemente antes de sortear ese premio. La imagen es opcional: copia el archivo dentro de <code>assets/premios/</code> y escribe aquí la ruta local (ej. <code>assets/premios/premio1.png</code>) — ver <code>assets/LEEME.txt</code>.</p>
+          <div id="lista-nombres-premios" class="lista-premios"></div>
+        </div>
+      </fieldset>
+
+      <!-- Resumen antes de iniciar -->
+      <div class="resumen-previo" id="resumen-previo">
+        <p class="resumen-previo-title">Resumen antes de iniciar</p>
+        <ul class="resumen-previo-grid">
+          <li><span>Participantes cargados</span><strong id="rp-participantes">0</strong></li>
+          <li><span>Líneas no válidas</span><strong id="rp-invalidas">0</strong></li>
+          <li><span>Premios</span><strong id="rp-premios">1</strong></li>
+          <li><span>Al agua por premio</span><strong id="rp-al-agua">1</strong></li>
+          <li><span>Accesitarios por premio</span><strong id="rp-accesitarios">1</strong></li>
+        </ul>
+      </div>
+
+      <button type="submit" id="btn-iniciar-sorteo" class="btn-primary">Iniciar sorteo →</button>
+    </form>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- PÁGINA INTRO: portada del sorteo en vivo (nombre + descripción) -->
+  <!-- ============================================================ -->
+  <section id="page-intro" class="page theme-sorteo hidden">
+    <div class="burbujas" aria-hidden="true">
+      <span style="--s:110px; --l:4%;  --d:22s; --del:0s"></span>
+      <span style="--s:55px;  --l:14%; --d:16s; --del:2s;  --o:.18"></span>
+      <span style="--s:85px;  --l:24%; --d:26s; --del:4s"  class="contorno"></span>
+      <span style="--s:150px; --l:40%; --d:30s; --del:6s"></span>
+      <span style="--s:65px;  --l:52%; --d:18s; --del:3s;  --o:.16"></span>
+      <span style="--s:95px;  --l:64%; --d:24s; --del:5s"  class="contorno"></span>
+      <span style="--s:130px; --l:76%; --d:28s; --del:7s"></span>
+      <span style="--s:45px;  --l:90%; --d:14s; --del:1s;  --o:.2"></span>
+    </div>
+
+    <!-- Destellos: capa decorativa extra (además de las burbujas) para dar
+         más vida a la portada — puntos que titilan suavemente en su lugar,
+         a diferencia de las burbujas que ascienden de forma continua. -->
+    <div class="destellos" aria-hidden="true">
+      <span style="--l:8%;  --t:18%; --s:10px; --dd:3.2s; --del:0s"></span>
+      <span style="--l:20%; --t:72%; --s:7px;  --dd:2.6s; --del:.6s"></span>
+      <span style="--l:33%; --t:12%; --s:6px;  --dd:3.6s; --del:1.2s"></span>
+      <span style="--l:47%; --t:82%; --s:9px;  --dd:2.9s; --del:.3s" class="acento"></span>
+      <span style="--l:60%; --t:24%; --s:5px;  --dd:3.1s; --del:1.6s"></span>
+      <span style="--l:71%; --t:68%; --s:8px;  --dd:2.4s; --del:.9s" class="acento"></span>
+      <span style="--l:84%; --t:16%; --s:7px;  --dd:3.4s; --del:2.1s"></span>
+      <span style="--l:92%; --t:78%; --s:6px;  --dd:2.8s; --del:1.4s"></span>
+      <span style="--l:14%; --t:46%; --s:5px;  --dd:3.8s; --del:.2s"></span>
+      <span style="--l:78%; --t:44%; --s:9px;  --dd:3.0s; --del:1.9s" class="acento"></span>
+    </div>
+
+    <div class="portada-split" id="portada-split">
+      <div class="portada">
+        <!-- LOGO(S) DE LA PORTADA: copia tu PNG (con transparencia) en
+             assets/logo/logo.png — ver assets/LEEME.txt para más detalle.
+             Si el archivo no existe, este bloque se oculta solo (onerror). -->
+        <div class="portada-logos" id="portada-logos">
+          <img src="assets/logo/logo.png" alt="Logo" class="portada-logo"
+               onerror="this.closest('.portada-logos').style.display='none'">
+        </div>
+
+        <p class="portada-eyebrow insignia" data-text="En vivo">En vivo</p>
+        <h1 id="portada-nombre" class="portada-nombre texto-contorno" data-text="Nombre del sorteo">Nombre del sorteo</h1>
+        <p id="portada-descripcion" class="portada-descripcion"></p>
+        <button id="btn-comenzar-transmision" class="btn-primary btn-sorteo">Comenzar</button>
+      </div>
+
+      <!-- AFICHE DE LA PORTADA: divide la pantalla mitad y mitad — a la
+           izquierda toda la información de siempre, a la derecha este
+           afiche/poster. Copia tu imagen (vertical, tipo cartel) en:
+             assets/logo/afiche.png
+           Si el archivo no existe, este bloque se oculta solo y la
+           información de la izquierda vuelve a ocupar toda la pantalla
+           (ver clase .sin-afiche, aplicada automáticamente por onerror). -->
+      <div class="portada-afiche-slot" id="portada-afiche-slot">
+        <img src="assets/logo/afiche.png" alt="Afiche del sorteo" class="portada-afiche"
+             onerror="document.getElementById('portada-split').classList.add('sin-afiche'); this.closest('.portada-afiche-slot').style.display='none';">
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================ -->
+  <!-- PÁGINA 2: SORTEO (tema oscuro / mismo para ruleta y resumen)  -->
+  <!-- ============================================================ -->
+  <section id="page-sorteo" class="page theme-sorteo hidden">
+
+    <div class="burbujas" aria-hidden="true">
+      <span style="--s:120px; --l:2%;  --d:22s; --del:0s"></span>
+      <span style="--s:60px;  --l:11%; --d:16s; --del:2s;  --o:.16"></span>
+      <span style="--s:90px;  --l:19%; --d:26s; --del:4s"  class="contorno"></span>
+      <span style="--s:40px;  --l:29%; --d:14s; --del:1s;  --o:.2"></span>
+      <span style="--s:160px; --l:37%; --d:30s; --del:6s"></span>
+      <span style="--s:70px;  --l:47%; --d:18s; --del:3s;  --o:.16"></span>
+      <span style="--s:100px; --l:55%; --d:24s; --del:5s"  class="contorno"></span>
+      <span style="--s:50px;  --l:63%; --d:15s; --del:.5s; --o:.2"></span>
+      <span style="--s:140px; --l:71%; --d:28s; --del:7s"></span>
+      <span style="--s:35px;  --l:80%; --d:12s; --del:1.5s;--o:.24"></span>
+      <span style="--s:120px; --l:90%; --d:24s; --del:2.5s;--o:.1"  class="contorno"></span>
+    </div>
+
+    <header class="sorteo-header">
+      <h2 id="sorteo-nombre-evento">Nombre del sorteo</h2>
+      <div id="sorteo-progreso" class="progreso"></div>
+    </header>
+
+    <!-- Vista: presentación del premio (antes de sortear al agua/ganador/accesitarios) -->
+    <div id="vista-premio-intro" class="vista hidden">
+      <div class="premio-intro-grid">
+        <div class="premio-intro-texto">
+          <p id="premio-intro-eyebrow" class="premio-intro-eyebrow insignia" data-text="Premio 1 de 1">Premio <span id="premio-intro-numero">1</span> de <span id="premio-intro-total">1</span></p>
+          <h2 id="premio-intro-nombre" class="premio-intro-nombre texto-contorno subtitulo" data-text="Nombre del premio">Nombre del premio</h2>
+          <p id="premio-intro-descripcion" class="premio-intro-descripcion"></p>
+          <div class="acciones acciones--izquierda">
+            <button id="btn-comenzar-premio" class="btn-primary btn-sorteo">Comenzar sorteo →</button>
+          </div>
+        </div>
+
+        <div class="premio-intro-imagen-slot">
+          <div class="premio-imagen-frame" id="premio-imagen-frame">
+            <img id="premio-imagen-foto" class="hidden" alt="Imagen del premio">
+            <svg id="premio-imagen-generica" class="premio-imagen-generica" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 12v9H4v-9M22 7H2v5h20V7zM12 22V7M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 1 0 0-5C9 2 12 7 12 7z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vista: revelado con ruleta -->
+    <div id="vista-reveal" class="vista hidden">
+      <p class="etiqueta-evento" id="etiqueta-evento">Al agua #1 &middot; Premio 1</p>
+
+      <!-- Escena GANADOR: layout de dos columnas con imagen del premio -->
+      <div id="escena-ganador" class="escena-ganador hidden">
+        <h3 class="ganador-titular texto-contorno" id="ganador-titular" data-text="Hora de conocer al ganador del premio">
+          Hora de conocer al ganador del premio
+        </h3>
+
+        <div class="ganador-grid">
+          <div class="ganador-col-texto">
+            <div class="ruleta-ventana">
+              <div class="ruleta-cinta" id="ruleta-cinta-ganador">
+                <div class="ruleta-item ruleta-placeholder">Presiona "Revelar" para comenzar</div>
+              </div>
+            </div>
+
+            <div class="timer-circular hidden" id="ruleta-timer-ganador">
+              <svg viewBox="0 0 64 64" class="timer-circular-svg">
+                <circle class="timer-circular-bg" cx="32" cy="32" r="28"></circle>
+                <circle class="timer-circular-progreso" id="ruleta-timer-progreso-ganador" cx="32" cy="32" r="28"></circle>
+              </svg>
+              <span class="timer-circular-numero" id="ruleta-timer-numero-ganador">0</span>
+            </div>
+
+            <!-- Nombre y código del ganador: elemento aparte de la ruleta, así la
+                 ventana de la ruleta se mantiene siempre del mismo tamaño y es el
+                 texto el que se adapta al nombre (sin recortarse ni verse ilegible). -->
+            <div class="resultado-final hidden" id="resultado-final-ganador">
+              <p class="resultado-nombre texto-contorno subtitulo zoom-continuo" id="resultado-nombre-ganador" data-text="—">—</p>
+              <p class="resultado-codigo" id="resultado-codigo-ganador">—</p>
+            </div>
+          </div>
+
+          <div class="ganador-col-premio">
+            <div class="ganador-imagen-wrap" id="ganador-imagen-wrap">
+              <div class="premio-imagen-frame" id="ganador-imagen-frame">
+                <img id="ganador-imagen-foto" class="hidden" alt="Imagen del premio">
+                <svg id="ganador-imagen-generica" class="premio-imagen-generica" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M20 12v9H4v-9M22 7H2v5h20V7zM12 22V7M12 7H7.5a2.5 2.5 0 1 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 1 0 0-5C9 2 12 7 12 7z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <p class="ganador-previo-linea" id="ganador-previo-arriba">El ganador se lleva</p>
+            <p class="premio-nombre-badge texto-contorno subtitulo" id="ganador-nombre-premio" data-text="">Premio</p>
+          </div>
+        </div>
+
+        <div class="ganador-congrats hidden" id="ganador-congrats">
+          <h2 class="congrats-titulo texto-contorno" id="congrats-titulo" data-text="&iexcl;Felicidades, ganaste!">&iexcl;Felicidades, ganaste!</h2>
+          <p class="premio-nombre-badge texto-contorno subtitulo" id="congrats-premio" data-text="">Premio</p>
+        </div>
+      </div>
+
+      <!-- Escena SIMPLE: al agua / accesitario -->
+      <div id="escena-simple" class="ruleta-box">
+        <div class="ruleta-ventana">
+          <div class="ruleta-cinta" id="ruleta-cinta">
+            <div class="ruleta-item ruleta-placeholder">Presiona "Revelar" para comenzar</div>
+          </div>
+        </div>
+        <div class="timer-circular hidden" id="ruleta-timer">
+          <svg viewBox="0 0 64 64" class="timer-circular-svg">
+            <circle class="timer-circular-bg" cx="32" cy="32" r="28"></circle>
+            <circle class="timer-circular-progreso" id="ruleta-timer-progreso" cx="32" cy="32" r="28"></circle>
+          </svg>
+          <span class="timer-circular-numero" id="ruleta-timer-numero">0</span>
+        </div>
+
+        <div class="resultado-final hidden" id="resultado-final">
+          <p class="resultado-nombre" id="resultado-nombre" data-text="—">—</p>
+          <p class="resultado-codigo" id="resultado-codigo">—</p>
+          <p class="resultado-mensaje hidden" id="resultado-mensaje"></p>
+        </div>
+      </div>
+
+      <div class="acciones">
+        <button id="btn-revelar" class="btn-primary btn-sorteo">Revelar</button>
+        <button id="btn-continuar" class="btn-secondary btn-sorteo hidden">Continuar</button>
+      </div>
+    </div>
+
+    <!-- Vista: resumen de premio o resumen final (mismo tema) -->
+    <div id="vista-resumen" class="vista hidden">
+      <h3 id="resumen-titulo">Resumen del premio</h3>
+      <div id="resumen-contenido" class="resumen-contenido"></div>
+      <div class="acciones">
+        <button id="btn-continuar-resumen" class="btn-primary btn-sorteo">Continuar</button>
+        <button id="btn-descargar-csv" class="btn-secondary btn-sorteo hidden">Descargar CSV</button>
+        <button id="btn-volver-config" class="btn-secondary btn-sorteo hidden">Volver a configuración</button>
+      </div>
+    </div>
+
+  </section>
+
+</div>
+
+<!-- FOOTER FIJO DE MARCA: se ve SIEMPRE, en todas las pantallas (configuración,
+     portada "En vivo", ruleta y resumen —incluido el resumen final—), porque
+     está fuera de las secciones .page que se muestran/ocultan.
+     Muestra los DOS logos definidos:
+       - Principal: assets/logo/logo.png (el mismo de la portada)
+       - Secundario: assets/logo/logo2.png
+     Cada logo se controla de forma independiente: si logo2.png no existe,
+     solo ese logo se oculta (el principal se sigue viendo). El footer
+     completo solo se oculta si NINGUNO de los dos logos logra cargar. -->
+<script>
+  function footerLogoError(img) {
+    img.style.display = 'none';
+    const footer = img.closest('.footer-marca');
+    if (footer && !footer.querySelector('img:not([style*="display: none"])')) {
+      footer.style.display = 'none';
+    }
+  }
+</script>
+<footer class="footer-marca" id="footer-marca">
+  <img src="assets/logo/logo2.png" alt="Logo secundario" class="footer-marca-logo footer-marca-logo-secundario"
+       onerror="footerLogoError(this)">
+</footer>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

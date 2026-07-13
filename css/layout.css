@@ -1,0 +1,51 @@
+/* ==========================================================
+   layout.css — estructura general de páginas
+   ========================================================== */
+
+#app {
+  min-height: 100vh;
+}
+
+.page {
+  display: none;
+  min-height: 100vh;
+}
+
+.page.active {
+  display: block;
+}
+
+/* ---- Página de configuración ---- */
+#page-config {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 48px 24px 140px;
+}
+
+/* ---- Página de sorteo (fullscreen) ---- */
+#page-sorteo {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 32px 24px 120px;
+}
+
+.vista {
+  width: 100%;
+  max-width: 780px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+}
+
+.acciones {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+  justify-content: center;
+}

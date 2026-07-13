@@ -1,0 +1,76 @@
+CÓMO AGREGAR TUS IMÁGENES LOCALES (sin links externos)
+========================================================
+
+1) LOGO DE LA PORTADA (pantalla "En vivo")
+   - Copia tu PNG (con transparencia) dentro de: assets/logo/
+   - Nómbralo exactamente:  logo.png
+   - Ruta final debe quedar:  assets/logo/logo.png
+   - No necesitas tocar el HTML: si el archivo existe, aparece solo.
+     Si no existe, no se muestra nada (no rompe la página).
+   - Este mismo archivo (logo.png) se usa también como ÍCONO DE LA
+     PESTAÑA del navegador (favicon) — no hace falta subir otro archivo
+     para eso.
+   - Para varios logos (ej. auspiciadores), copia también logo-2.png,
+     logo-3.png, etc. dentro de assets/logo/ y agrega un <img> más
+     en index.html, dentro de <div id="portada-logos">, copiando el
+     bloque existente y cambiando el nombre del archivo en src="".
+
+2) AFICHE DE LA PORTADA (divide la pantalla mitad y mitad)
+   - Copia tu imagen tipo cartel/poster (vertical u horizontal, buena
+     resolución) dentro de: assets/logo/
+   - Nómbralo exactamente:  afiche.png
+   - Ruta final debe quedar:  assets/logo/afiche.png
+   - La portada se divide en dos mitades: a la izquierda toda la
+     información de siempre (logo, nombre del sorteo, descripción y el
+     botón "Comenzar"); a la derecha, este afiche a pantalla completa.
+   - Si el archivo no existe, no se muestra nada raro: la información de
+     la izquierda vuelve a ocupar toda la pantalla, centrada, igual que
+     antes de tener afiche (no rompe la página).
+   - Recomendación: una imagen con buen contraste y foco en el centro,
+     ya que se recorta con object-fit: cover para llenar toda la mitad
+     de la pantalla (alto completo).
+
+3) LOGO 2 — FOOTER FIJO (aparece SIEMPRE, en TODAS las pantallas)
+   - Copia tu segundo PNG (el que va en la pastilla blanca redondeada
+     de abajo, distinto al de la portada) dentro de: assets/logo/
+   - Nómbralo exactamente:  logo2.png
+   - Ruta final debe quedar:  assets/logo/logo2.png
+   - Igual que el logo de portada: si el archivo no existe, el footer
+     se oculta solo (no rompe la página).
+   - Este footer SÍ lleva un fondo blanco redondeado tipo pastilla
+     (como en el ejemplo que mandaste), porque va sobre fondos de
+     distintos colores según la pantalla (blanco en configuración,
+     azul en la ruleta), así siempre se lee bien.
+
+4) IMÁGENES DE LOS PREMIOS (se ven antes de sortear y en la escena
+   del ganador)
+   - Copia cada imagen dentro de: assets/premios/
+   - Ejemplo: assets/premios/premio1.png, assets/premios/premio2.png
+   - En la página de configuración (Paso 3 → "Nombres, descripción e
+     imagen de los premios"), en el campo de imagen de cada premio,
+     escribe la ruta local, por ejemplo:
+       assets/premios/premio1.png
+     (ya NO hace falta pegar un link https://... — puede ser local
+     o seguir aceptando una URL si prefieres).
+
+RECOMENDACIONES PARA LOS PNG
+   - LOGO DE PORTADA (logo.png): usa PNG con fondo TRANSPARENTE. Va
+     directo sobre el azul, sin marco ni recuadro blanco, con una
+     sombra suave — se ve limpio y profesional.
+   - LOGO 2 / FOOTER (logo2.png): también puede ser PNG transparente;
+     igual se va a ver bien porque el footer ya le pone su propio
+     fondo blanco en forma de pastilla redondeada detrás.
+   - Usa imágenes de buena resolución (al menos 600px de ancho en el
+     logo de portada) para que no se vean pixeladas al agrandarse.
+   - Las imágenes de premios sí tienen su propio marco/sombra cuando
+     no hay foto (ícono genérico); cuando subes tu imagen, se muestra
+     limpia y sin recuadro, igual que el logo de portada.
+
+IMPORTANTE: como index.html carga los scripts con
+<script type="module">, el navegador NO lo abrirá bien con doble
+clic (file://). Debes servir la carpeta con un servidor local, por
+ejemplo:
+   npx serve .
+   o:  python3 -m http.server 8080
+y luego abrir http://localhost:PUERTO en el navegador.
+
