@@ -4,14 +4,14 @@
 
 export const state = {
   config: {
-    nombreSorteo: 'GRAN SORTEO DE TELEVISORES ELECTROPUNO - ZONA SUR',
-    descripcion: 'EN ELECTRO PUNO PREMIAMOS TU PUNTUALIDAD.',
-    numPremios: 1,
-    numAlAgua: 1,
-    numAccesitarios: 1,
-    duracionAlAgua: 4,
-    duracionPremio: 6,
-    duracionAccesitario: 4,
+    nombreSorteo: 'GRAN SORTEO DE TELEVISORES ELECTROPUNO - ZONA NORTE',
+    descripcion: 'ELECTRO PUNO PREMIA TU PUNTUALIDAD.',
+    numPremios: 10,
+    numAlAgua: 2,
+    numAccesitarios: 2,
+    duracionAlAgua: 5,
+    duracionPremio: 10,
+    duracionAccesitario: 5,
     nombresPremios: ['Premio 1'],
     descripcionesPremios: [''],
     imagenesPremios: ['https://cdn.zyrosite.com/cdn-ecommerce/store_01J5NNH9X7HXZVVMSR18D3SMTC%2Fassets%2F1724167212049-TELEVISOR%20LG%2055UR7800PSB%2055%20PULGADAS.webp'],
@@ -94,7 +94,7 @@ export function leerArchivoComoTexto(file) {
 export function generarNombresPremios(cantidad, actuales = []) {
   const nombres = [];
   for (let i = 0; i < cantidad; i++) {
-    nombres.push(actuales[i] || `${i + 1}°. TELEVISOR LG 55 PULGADAS`);
+    nombres.push(actuales[i] || `${i + 1}° TELEVISOR LG 55 PULGADAS`);
   }
   return nombres;
 }
@@ -103,7 +103,7 @@ export function generarNombresPremios(cantidad, actuales = []) {
 export function generarDescripcionesPremios(cantidad, actuales = []) {
   const descripciones = [];
   for (let i = 0; i < cantidad; i++) {
-    descripciones.push(actuales[i] || 'EN ELECTRO PUNO PREMIAMOS TU PUNTUALIDAD.');
+    descripciones.push(actuales[i] || 'ELECTRO PREMIA TU PUNTUALIDAD.');
   }
   return descripciones;
 }

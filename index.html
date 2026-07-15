@@ -42,7 +42,7 @@
 
         <label class="field">
           <span>Nombre del sorteo</span>
-          <input type="text" id="input-nombre" placeholder="Ej. Sorteo Aniversario 2026" value="GRAN SORTEO DE TELEVISORES ELECTROPUNO - ZONA SUR" required>
+          <input type="text" id="input-nombre" placeholder="Ej. Sorteo Aniversario 2026" value="GRAN SORTEO DE TELEVISORES ELECTROPUNO - ZONA NORTE" required>
         </label>
 
         <label class="field">
@@ -240,8 +240,12 @@
     </div>
 
     <header class="sorteo-header">
-      <h2 id="sorteo-nombre-evento">Nombre del sorteo</h2>
-      <div id="sorteo-progreso" class="progreso"></div>
+      <img src="assets/logo/logo.png" alt="Logo" class="sorteo-header-logo"
+           onerror="this.style.display='none'; this.closest('.sorteo-header').classList.add('sin-logo')">
+      <div class="sorteo-header-texto">
+        <h2 id="sorteo-nombre-evento">Nombre del sorteo</h2>
+        <div id="sorteo-progreso" class="progreso"></div>
+      </div>
     </header>
 
     <!-- Vista: presentación del premio (antes de sortear al agua/ganador/accesitarios) -->
@@ -352,7 +356,8 @@
 
     <!-- Vista: resumen de premio o resumen final (mismo tema) -->
     <div id="vista-resumen" class="vista hidden">
-      <h3 id="resumen-titulo">Resumen del premio</h3>
+      <p id="resumen-eyebrow" class="resumen-eyebrow insignia" data-text=""></p>
+      <h3 id="resumen-titulo" class="resumen-titulo-festivo texto-contorno subtitulo" data-text="">Resumen del premio</h3>
       <div id="resumen-contenido" class="resumen-contenido"></div>
       <div class="acciones">
         <button id="btn-continuar-resumen" class="btn-primary btn-sorteo">Continuar</button>

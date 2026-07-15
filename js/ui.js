@@ -589,14 +589,33 @@ function registrarResultado(evento, persona) {
 
 function filaResumen(entrada) {
   const esGanador = entrada.tipo === 'ganador';
-  const etiquetaTipo = entrada.tipo === 'ganador'
+  const esAccesitario = entrada.tipo === 'accesitario';
+  const etiquetaTipo = esGanador
     ? ETIQUETAS_TIPO.ganador
     : `${ETIQUETAS_TIPO[entrada.tipo]} #${entrada.numero}`;
 
+  // Nombre del ganador/accesitario: mismo truco visual de "texto con contorno"
+  // que el resto de la pantalla (blanco + contorno de color), para que sea
+  // grande y se distinga bien — naranja para el ganador, verde para accesitario.
+  const claseContorno = esGanador ? 'naranja' : (esAccesitario ? 'azul' : '');
+
   return crearElemento('div', { class: `resumen-fila${esGanador ? ' es-ganador' : ''}` }, [
     crearElemento('span', { class: 'resumen-tipo', text: etiquetaTipo }),
-    crearElemento('span', { class: 'resumen-nombre', text: entrada.nombre }),
+    crearElemento('span', {
+      class: `resumen-nombre texto-contorno-mini ${claseContorno}`,
+      text: entrada.nombre,
+      attrs: { 'data-text': entrada.nombre },
+    }),
     crearElemento('span', { class: 'resumen-codigo', text: entrada.codigo }),
+  ]);
+}
+
+/** Construye el <h4> del premio como una pastilla completa (mismo diseño que
+ * la numeración "#1" de las tarjetas del resumen final), cubriendo toda la
+ * frase — p. ej. "1° TELEVISOR LG 55 PULGADAS" — no solo el número. */
+function crearTituloPremio(nombrePremio) {
+  return crearElemento('h4', { class: 'resumen-premio-titulo' }, [
+    crearElemento('span', { class: 'resumen-ordinal-pill', text: nombrePremio }),
   ]);
 }
 
@@ -605,17 +624,28 @@ function mostrarResumenPremio(premioIndex) {
   actualizarProgreso(premioIndex);
 
   const titulo = document.getElementById('resumen-titulo');
+  const eyebrow = document.getElementById('resumen-eyebrow');
   const contenido = document.getElementById('resumen-contenido');
+  contenido.classList.remove('resumen-contenido-final');
   const nombrePremio = state.config.nombresPremios[premioIndex];
-  titulo.textContent = `Resumen · ${nombrePremio}`;
+
+  eyebrow.textContent = `Resumen · Premio ${premioIndex + 1} de ${state.config.numPremios} · ${nombrePremio}`;
+  eyebrow.dataset.text = eyebrow.textContent;
+  eyebrow.classList.remove('hidden');
+
+  const tituloTexto = '¡Felicidades al ganador y sus accesitarios!';
+  titulo.textContent = tituloTexto;
+  titulo.dataset.text = tituloTexto;
 
   // El "al agua" se guarda igualmente en el registro/CSV, pero no se muestra aquí:
   // en el resumen solo deben verse el ganador y los accesitarios.
   const entradas = state.registro.filter(r => r.premioIndex === premioIndex && r.tipo !== 'al_agua');
   contenido.innerHTML = '';
   const bloque = crearElemento('div', { class: 'resumen-premio-bloque' });
-  bloque.appendChild(crearElemento('h4', { text: nombrePremio }));
-  entradas.forEach(entrada => bloque.appendChild(filaResumen(entrada)));
+  bloque.appendChild(crearTituloPremio(nombrePremio));
+  const filasWrap = crearElemento('div', { class: 'resumen-filas' });
+  entradas.forEach(entrada => filasWrap.appendChild(filaResumen(entrada)));
+  bloque.appendChild(filasWrap);
   contenido.appendChild(bloque);
 
   document.getElementById('btn-descargar-csv').classList.add('hidden');
@@ -637,17 +667,30 @@ function mostrarResumenFinal() {
   irAVista('resumen');
   confetiActivo = iniciarConfeti(document.getElementById('vista-resumen'));
   document.getElementById('sorteo-progreso').textContent = 'Sorteo finalizado';
-  document.getElementById('resumen-titulo').textContent = `Resumen final · ${state.config.nombreSorteo}`;
+
+  const eyebrow = document.getElementById('resumen-eyebrow');
+  eyebrow.textContent = state.config.nombreSorteo;
+  eyebrow.dataset.text = eyebrow.textContent;
+  eyebrow.classList.remove('hidden');
+
+  const titulo = document.getElementById('resumen-titulo');
+  const tituloTexto = '¡Felicidades a todos los ganadores!';
+  titulo.textContent = tituloTexto;
+  titulo.dataset.text = tituloTexto;
 
   const contenido = document.getElementById('resumen-contenido');
   contenido.innerHTML = '';
+  contenido.classList.add('resumen-contenido-final');
 
   for (let p = 0; p < state.config.numPremios; p++) {
     // Igual que en el resumen por premio: "al agua" queda fuera de la vista, pero sigue en el CSV.
     const entradas = state.registro.filter(r => r.premioIndex === p && r.tipo !== 'al_agua');
-    const bloque = crearElemento('div', { class: 'resumen-premio-bloque' });
-    bloque.appendChild(crearElemento('h4', { text: state.config.nombresPremios[p] }));
-    entradas.forEach(entrada => bloque.appendChild(filaResumen(entrada)));
+    const bloque = crearElemento('div', { class: 'resumen-premio-bloque resumen-final-bloque' });
+    bloque.appendChild(crearElemento('span', { class: 'resumen-final-numero', text: `#${p + 1}` }));
+    bloque.appendChild(crearTituloPremio(state.config.nombresPremios[p]));
+    const filasWrap = crearElemento('div', { class: 'resumen-filas' });
+    entradas.forEach(entrada => filasWrap.appendChild(filaResumen(entrada)));
+    bloque.appendChild(filasWrap);
     contenido.appendChild(bloque);
   }
 
