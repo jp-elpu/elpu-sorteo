@@ -156,7 +156,7 @@ function renderNombresPremios(cantidad) {
     inputDescripcion.value = descripciones[i];
 
     const inputImagen = crearElemento('input', {
-      attrs: { type: 'text', 'data-idx': i, 'data-campo': 'imagen', placeholder: 'Ruta local, ej. assets/premios/premio1.png (opcional)' },
+      attrs: { type: 'text', 'data-idx': i, 'data-campo': 'imagen', placeholder: 'Ruta local o link de imagen, ej. assets/premios/premio1.png (opcional)' },
     });
     inputImagen.value = imagenes[i];
 

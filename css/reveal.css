@@ -912,13 +912,13 @@
 .ganador-titular {
   text-align: center;
   font-size: clamp(1.3rem, 3.2vw, 2.1rem);
-  margin-bottom: clamp(6px, 1.4vw, 12px);
+  margin-bottom: clamp(2px, 0.6vw, 6px);
 }
 
 /* Modo "¡FELICIDADES, GANASTE!": mismo tamaño que el título normal, con el
    zoom continuo (se activa por JS al terminar de girar la ruleta). */
 .ganador-titular.es-felicidades {
-  margin-bottom: clamp(4px, 1vw, 8px);
+  margin-bottom: clamp(2px, 0.5vw, 4px);
 }
 
 /* Eslogan de marca debajo del título de felicitación: blanco + contorno
@@ -926,7 +926,7 @@
 .ganador-eslogan {
   text-align: center;
   font-size: clamp(0.85rem, 2vw, 1.25rem);
-  margin-bottom: clamp(6px, 1.2vw, 12px);
+  margin-bottom: clamp(2px, 0.6vw, 6px);
 }
 
 .ganador-grid {

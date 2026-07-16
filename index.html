@@ -49,6 +49,14 @@
           <span>Descripción <em>(opcional)</em></span>
           <textarea id="input-descripcion" rows="2" placeholder="Detalles adicionales del sorteo">ELECTRO PUNO PREMIA TU PUNTUALIDAD.</textarea>
         </label>
+
+        <p class="hint">
+          ¿Quieres un afiche/poster en la portada? Copia tu imagen (vertical, tipo cartel) en
+          <code>assets/logo/afiche.png</code> — ver <code>assets/LEEME.txt</code>. La imagen se
+          recorta y ajusta sola para llenar su mitad de la pantalla, no hace falta editarla a mano,
+          pero se ve mejor mientras más vertical sea. Si no colocas ningún archivo, esta sección se
+          oculta sola y la información ocupa toda la pantalla.
+        </p>
       </fieldset>
 
       <!-- Paso 2: Cargar participantes -->
@@ -128,7 +136,7 @@
 
         <div class="field">
           <span>Nombres, descripción e imagen de los premios</span>
-          <p class="hint" style="margin-top:2px;">La descripción es opcional y se muestra brevemente antes de sortear ese premio. La imagen es opcional: copia el archivo dentro de <code>assets/premios/</code> y escribe aquí la ruta local (ej. <code>assets/premios/premio1.png</code>) — ver <code>assets/LEEME.txt</code>.</p>
+          <p class="hint" style="margin-top:2px;">La descripción es opcional y se muestra brevemente antes de sortear ese premio. La imagen es opcional: copia el archivo dentro de <code>assets/premios/</code> y escribe aquí la ruta local (ej. <code>assets/premios/premio1.png</code>), o pega directamente el link de una imagen de internet (ej. <code>https://.../premio.jpg</code>) — ver <code>assets/LEEME.txt</code>.</p>
           <div id="lista-nombres-premios" class="lista-premios"></div>
         </div>
       </fieldset>
