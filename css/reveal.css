@@ -912,7 +912,21 @@
 .ganador-titular {
   text-align: center;
   font-size: clamp(1.3rem, 3.2vw, 2.1rem);
-  margin-bottom: clamp(20px, 4vw, 36px);
+  margin-bottom: clamp(6px, 1.4vw, 12px);
+}
+
+/* Modo "¡FELICIDADES, GANASTE!": mismo tamaño que el título normal, con el
+   zoom continuo (se activa por JS al terminar de girar la ruleta). */
+.ganador-titular.es-felicidades {
+  margin-bottom: clamp(4px, 1vw, 8px);
+}
+
+/* Eslogan de marca debajo del título de felicitación: blanco + contorno
+   naranja (mismo estilo que .subtitulo), más chico que el título. */
+.ganador-eslogan {
+  text-align: center;
+  font-size: clamp(0.85rem, 2vw, 1.25rem);
+  margin-bottom: clamp(6px, 1.2vw, 12px);
 }
 
 .ganador-grid {
@@ -937,7 +951,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   width: 100%;
   min-width: 0;
 }
@@ -947,7 +961,7 @@
   font-weight: 700;
   color: var(--sorteo-text);
   font-size: 1.05rem;
-  margin: 6px 0 0;
+  margin: 2px 0 0;
 }
 
 .premio-nombre-badge {
@@ -955,6 +969,16 @@
   text-align: center;
   text-transform: uppercase;
   line-height: 1.05;
+}
+
+/* Ajuste fino SOLO del bloque nombre+código del ganador (por id), para no
+   afectar a "al agua"/accesitario que comparten las mismas clases base. */
+#resultado-final-ganador {
+  margin-top: 4px;
+}
+
+#resultado-nombre-ganador {
+  margin-bottom: 6px;
 }
 
 /* Resplandor detrás de la imagen mientras gira la ruleta del ganador */
@@ -995,16 +1019,6 @@
 @keyframes imagen-zoom-suave {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.06); }
-}
-
-.ganador-congrats {
-  text-align: center;
-  margin-top: clamp(20px, 4vw, 36px);
-}
-
-.congrats-titulo {
-  font-size: clamp(1.6rem, 4vw, 2.7rem);
-  margin-bottom: 10px;
 }
 
 /* ---------- Confeti + serpentinas (momento del GANADOR — revelado y resumen final) ----------

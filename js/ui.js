@@ -300,6 +300,10 @@ function mostrarVistaReveal(evento) {
   } else {
     etiqueta.textContent = `Accesitario #${evento.numero} · ${nombrePremio}`;
   }
+  // En la pestaña del ganador esta etiqueta es redundante con el título grande
+  // "HORA DE CONOCER AL GANADOR DEL ..." (ver prepararEscenaGanador), así que
+  // se oculta solo ahí; en "al agua"/"accesitario" se sigue mostrando normal.
+  etiqueta.classList.toggle('hidden', esGanador);
 
   document.getElementById('escena-ganador').classList.toggle('hidden', !esGanador);
   document.getElementById('escena-simple').classList.toggle('hidden', esGanador);
@@ -355,6 +359,15 @@ function prepararEscenaGanador(evento) {
   const premioIndex = evento.premioIndex;
   const nombrePremio = state.config.nombresPremios[premioIndex];
 
+  // Título grande de la escena: reemplaza a la etiqueta "Ganador · premio" de
+  // arriba (que se oculta en esta pestaña) para no repetir la misma info.
+  const tituloEl = document.getElementById('ganador-titular');
+  const textoTitulo = `HORA DE CONOCER AL GANADOR DEL ${nombrePremio}`.toUpperCase();
+  tituloEl.textContent = textoTitulo;
+  tituloEl.dataset.text = textoTitulo;
+  tituloEl.classList.remove('es-felicidades', 'zoom-continuo');
+  document.getElementById('ganador-eslogan').classList.add('hidden');
+
   const badge = document.getElementById('ganador-nombre-premio');
   badge.textContent = nombrePremio;
   badge.dataset.text = nombrePremio;
@@ -380,7 +393,6 @@ function prepararEscenaGanador(evento) {
   document.getElementById('ruleta-timer-ganador').classList.add('hidden');
   document.getElementById('ruleta-timer-progreso-ganador').style.strokeDashoffset = '0';
   document.getElementById('resultado-final-ganador').classList.add('hidden');
-  document.getElementById('ganador-congrats').classList.add('hidden');
   document.getElementById('ganador-imagen-wrap').classList.remove('girando');
 }
 
@@ -515,9 +527,20 @@ async function ejecutarReveladoGanador(evento) {
   codigoEl.textContent = persona.codigo;
   resultadoBox.classList.remove('hidden');
 
-  document.getElementById('congrats-premio').textContent = state.config.nombresPremios[evento.premioIndex];
-  document.getElementById('congrats-premio').dataset.text = state.config.nombresPremios[evento.premioIndex];
-  document.getElementById('ganador-congrats').classList.remove('hidden');
+  // El título grande que está sobre la ruleta ("Hora de conocer al ganador...")
+  // pasa a mostrar el mensaje de felicitación una vez revelado el nombre.
+  // No repetimos el nombre del premio aquí: ya se ve en la columna de la derecha.
+  // El título grande que está sobre la ruleta ("Hora de conocer al ganador...")
+  // pasa a mostrar el mensaje de felicitación una vez revelado el nombre:
+  // en mayúsculas, más grande y con zoom continuo. No repetimos el nombre
+  // del premio aquí: ya se ve en la columna de la derecha.
+  const tituloEl = document.getElementById('ganador-titular');
+  const textoFelicidades = '¡FELICIDADES, GANASTE!';
+  tituloEl.textContent = textoFelicidades;
+  tituloEl.dataset.text = textoFelicidades;
+  tituloEl.classList.add('es-felicidades', 'zoom-continuo');
+
+  document.getElementById('ganador-eslogan').classList.remove('hidden');
 
   confetiActivo = iniciarConfeti(document.getElementById('vista-reveal'));
 
